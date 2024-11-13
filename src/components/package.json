@@ -1,0 +1,9 @@
+{
+    "devDependencies": {
+        "@types/lodash-es": "^4.14.170",
+        "@types/react": "^18.2.8",
+        "temporal-polyfill": "^0.2.4",
+        "react-jss": "^10.9.0",
+        "react-router-dom": "^6.1.1"
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "medical-appointment-shared-components",
+  "version": "1.0.0",
+  "dependencies": {
+    "medical-appointment-button": "workspace:*"
+  },
+  "peerDependencies": {
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "react-dom": "^18.2.0",
+    "@types/react": "^18.2.8",
+    "tslib": "^2.5.3",
+    "temporal-polyfill": "^0.2.4",
+    "typescript": "^5.3.3"
+  }
+}
