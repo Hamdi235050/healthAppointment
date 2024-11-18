@@ -1,13 +1,14 @@
-import { Suspense } from "react"
-import { AppLoader } from "./AppLoader/AppLoader"
-import { BrowserRouter } from 'react-router-dom'
-import {Routes}
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Accueil } from "./frontEnd/Pages/Accueil/Accueil";
+import Login from "./frontEnd/Pages/Login";
 export default () => {
-    return (
-        <Suspense fallback={<AppLoader />}>
-          <BrowserRouter  >
-            <Routes
-          </BrowserRouter>
-        </Suspense>
-    )
-}
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route path={`/`} element={<Accueil />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};

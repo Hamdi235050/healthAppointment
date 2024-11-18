@@ -1,1 +1,1 @@
-export * from 'medicalAppointment-Button'
+export * from 'medical-appointment-button'

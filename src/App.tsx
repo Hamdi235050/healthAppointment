@@ -1,18 +1,14 @@
-
-import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from "react";
+import "./App.css";
 
 function App() {
+  const AppRoutes = lazy(() => import("./Routes"));
 
   return (
-    <>
-    <Router>
-
-      
-    </Router>
-
-    </>
-  )
+    <Suspense fallback={<div>Loading</div>}>
+      <AppRoutes />
+    </Suspense>
+  );
 }
 
-export default App
+export default App;
