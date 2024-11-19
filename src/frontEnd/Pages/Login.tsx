@@ -1,15 +1,45 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', { email, password });
+
+    try {
+      const response = await axios.post("http://localhost:8081/login", {
+        email: email,
+        password: password,
+      });
+
+      setMessage(response.data);
+      console.log(response.data);
+
+      if (response.status === 200) {
+        toast("success", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Mot de passe invalide", {
+        autoClose: 5000,
+      });
+      console.error(error);
+    }
   };
 
   return (
@@ -17,14 +47,19 @@ export default function Login() {
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Cabinet Médical</h2>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Cabinet Médical
+            </h2>
             <p className="mt-2 text-gray-600">Connectez-vous à votre espace</p>
           </div>
-          
+
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email ou Numéro de Mobile
                 </label>
                 <div className="mt-1 relative">
@@ -45,7 +80,10 @@ export default function Login() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Mot de passe
                 </label>
                 <div className="mt-1 relative">
@@ -74,13 +112,19 @@ export default function Login() {
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-900"
+                >
                   Se souvenir de moi
                 </label>
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                <a
+                  href="#"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
                   Mot de passe oublié?
                 </a>
               </div>
