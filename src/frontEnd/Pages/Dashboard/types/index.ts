@@ -15,9 +15,10 @@ export interface StatCard {
 export interface Appointment {
   id: number;
   patientName: string;
+  appointmentDate?: string;
   time: string;
   type: string;
-  status: 'confirmed' | 'pending' | 'cancelled';
+  status:  "SCHEDULED" |  "COMPLETED" |  "CANCELLED"
 }
 
 export interface MedicalNote {

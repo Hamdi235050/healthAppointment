@@ -3,38 +3,28 @@ import { Calendar } from "lucide-react";
 import { Appointment } from "./types";
 import AppointmentCard from "./components/appointments/AppointmentCard";
 import Sidebar from "./components/Sidebar";
+import { getAppointmentsData } from "../../../backEnd/getDataAppointments";
 
 const Appointments: React.FC = () => {
-  const appointments: Appointment[] = [
-    {
-      id: 1,
-      patientName: "Jean Dupont",
-      time: "14:30",
-      type: "Consultation générale",
-      status: "confirmed",
-    },
-    {
-      id: 2,
-      patientName: "Marie Martin",
-      time: "15:00",
-      type: "Suivi",
-      status: "pending",
-    },
-    {
-      id: 3,
-      patientName: "Pierre Bernard",
-      time: "16:15",
-      type: "Consultation urgente",
-      status: "confirmed",
-    },
-    {
-      id: 4,
-      patientName: "Sophie Laurent",
-      time: "17:00",
-      type: "Première consultation",
-      status: "pending",
-    },
-  ];
+  const [appointments, setAppointments] = React.useState<Appointment[]>([]);
+
+  React.useEffect(() => {
+    const fetchAppointments = async () => {
+      const data = await getAppointmentsData();
+      const list = data.map((appointment: Appointment) => ({
+        id: appointment.id,
+        patientName: appointment.patientName || "Unknown Patient",
+        time: appointment.appointmentDate
+          ? new Date(appointment.appointmentDate).toLocaleTimeString()
+          : "Invalid Date",
+        type: appointment.type,
+        status: appointment.status,
+      }));
+      setAppointments(list);
+    };
+
+    fetchAppointments();
+  }, []);
 
   return (
     <div className="flex h-screen w-screen">

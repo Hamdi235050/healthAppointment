@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Accueil } from "./frontEnd/Pages/Accueil/Accueil";
 import Appointments from "./frontEnd/Pages/Dashboard/Appointments";
 import Dashboard from "./frontEnd/Pages/Dashboard/Dashboard";
@@ -36,7 +36,11 @@ export default () => {
       element: <Login />,
       roles: [userRoles.PATIENT, userRoles.ADMIN],
     },
-    { path: "/Dashboard", element: <Dashboard />, roles: [userRoles.ADMIN] },
+    {
+      path: "/Dashboard/home",
+      element: <Dashboard />,
+      roles: [userRoles.ADMIN],
+    },
     {
       path: "/Dashboard/patients",
       element: <Patients />,
@@ -103,12 +107,9 @@ export default () => {
     <BrowserRouter>
       <Routes>
         {routesConfig.map((route, index) => {
-          if (route.roles.includes(role)) {
-            return (
-              <Route key={index} path={route.path} element={route.element} />
-            );
-          }
-          return null;
+          return (
+            <Route key={index} path={route.path} element={route.element} />
+          );
         })}
       </Routes>
     </BrowserRouter>

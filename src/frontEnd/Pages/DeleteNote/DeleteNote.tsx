@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FileText, AlertTriangle, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Dashboard/components/Sidebar";
+import { getNoteData } from "../../../backEnd/getNoteData";
+import { getPatientById } from "../../../backEnd/getPatientById";
 
 interface Note {
   id: number;
@@ -15,32 +17,28 @@ const DeleteNote: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
-  // Mock notes data
-  const notes: Note[] = [
-    {
-      id: 1,
-      patientName: "Jean Dupont",
-      date: "2024-03-15",
-      content: "Consultation de routine - Tension artérielle normale",
-    },
-    {
-      id: 2,
-      patientName: "Marie Martin",
-      date: "2024-03-14",
-      content: "Suivi traitement diabète - Glycémie stable",
-    },
-    {
-      id: 3,
-      patientName: "Pierre Bernard",
-      date: "2024-03-13",
-      content: "Consultation urgente - Angine",
-    },
-  ];
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      const notes: Note[] = await getNoteData();
+      const list = notes.map((note) => ({
+        id: note.id,
+        patientName: note.patient,
+        date: note.dateDajout.toString(),
+        content: note.contenu,
+      }));
+      setNotes(list);
+    };
+    fetchPatientData();
+  }, []);
+
+  console.log({ notes });
 
   const filteredNotes = notes.filter(
     (note) =>
-      note.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchTerm.toLowerCase())
+      note.patientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      note.content?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleDelete = () => {

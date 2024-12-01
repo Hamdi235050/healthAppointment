@@ -1,39 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Users, Search } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import { getPatientData, mapPatientData } from "../../../backEnd/getPatients";
 
-interface Patient {
+export type Patient = {
   id: number;
   name: string;
   age: number;
-  lastVisit: string;
+  lastVisit: Date;
   condition: string;
-}
+};
 
 const Patients: React.FC = () => {
-  const patients: Patient[] = [
-    {
-      id: 1,
-      name: "Jean Dupont",
-      age: 45,
-      lastVisit: "15/03/2024",
-      condition: "Hypertension",
-    },
-    {
-      id: 2,
-      name: "Marie Martin",
-      age: 32,
-      lastVisit: "14/03/2024",
-      condition: "Diabète Type 2",
-    },
-    {
-      id: 3,
-      name: "Pierre Bernard",
-      age: 58,
-      lastVisit: "13/03/2024",
-      condition: "Arthrose",
-    },
-  ];
+  const [patients, setPatients] = useState<Patient[]>([]); // You can replace `any` with a more specific type if needed
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const patientData = await getPatientData();
+        const list = patientData.map((patient: Patient) => ({
+          id: patient.id,
+          name: patient.name,
+          age: patient.age,
+          lastVisit: patient.lastVisit
+            ? new Date(patient.lastVisit).toLocaleDateString()
+            : "Unknown",
+          condition: patient.condition,
+        }));
+        setPatients(list); // Update the state with mapped data
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      }
+    };
+
+    fetchPatients();
+  }, []);
+  // const patients: Patient[] = [
+  //   {
+  //     id: 1,
+  //     name: "Jean Dupont",
+  //     age: 45,
+  //     lastVisit: "15/03/2024",
+  //     condition: "Hypertension",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Marie Martin",
+  //     age: 32,
+  //     lastVisit: "14/03/2024",
+  //     condition: "Diabète Type 2",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Pierre Bernard",
+  //     age: 58,
+  //     lastVisit: "13/03/2024",
+  //     condition: "Arthrose",
+  //   },
+  // ];
 
   return (
     <div className="flex h-screen w-screen">

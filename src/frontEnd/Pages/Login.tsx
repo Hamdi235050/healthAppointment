@@ -1,8 +1,9 @@
+import { Lock, Mail } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock } from "lucide-react";
-import axios from "axios";
 import { toast } from "react-toastify";
+import login from "../../backEnd/getData";
+import { getAppointmentsData } from "../../backEnd/getDataAppointments";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,17 +13,13 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post("http://localhost:8081/login", {
-        email: email,
-        password: password,
-      });
+      const response = login(email, password);
 
-      setMessage(response.data);
-      console.log(response.data);
+      setMessage((await response).data.message);
+      console.log((await response).data);
 
-      if (response.status === 200) {
+      if ((await response).status === 200) {
         toast("success", {
           position: "top-right",
           autoClose: 5000,
@@ -32,7 +29,7 @@ export default function Login() {
           draggable: true,
           progress: undefined,
         });
-        navigate("/dashboard");
+        navigate("/dashboard/home");
       }
     } catch (error) {
       toast.error("Mot de passe invalide", {

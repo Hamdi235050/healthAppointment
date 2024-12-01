@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserMinus, AlertTriangle, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Dashboard/components/Sidebar";
+import { getPatientData } from "../../../backEnd/getPatients";
+import { deletePatient } from "../../../backEnd/deletePatient";
 
 interface Patient {
   id: number;
@@ -14,28 +16,15 @@ const DeletePatient: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [patients, setPatients] = useState<Patient[]>([]);
 
-  // Mock patient data
-  const patients: Patient[] = [
-    {
-      id: 1,
-      name: "Jean Dupont",
-      dateOfBirth: "1980-01-01",
-      email: "jean.dupont@email.com",
-    },
-    {
-      id: 2,
-      name: "Marie Martin",
-      dateOfBirth: "1985-05-15",
-      email: "marie.martin@email.com",
-    },
-    {
-      id: 3,
-      name: "Pierre Bernard",
-      dateOfBirth: "1975-12-30",
-      email: "pierre.bernard@email.com",
-    },
-  ];
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      const patientData = await getPatientData();
+      setPatients(patientData);
+    };
+    fetchPatientData();
+  }, []);
 
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -43,9 +32,9 @@ const DeletePatient: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedPatient) {
-      // Handle delete logic here
       console.log("Deleting patient:", selectedPatient);
-      navigate("/patients");
+      deletePatient(selectedPatient.id);
+      window.location.reload();
     }
   };
 

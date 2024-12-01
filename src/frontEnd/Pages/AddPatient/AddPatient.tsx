@@ -2,24 +2,27 @@ import React, { useState } from "react";
 import { UserPlus, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Dashboard/components/Sidebar";
+import { addPatient } from "../../../backEnd/submitPatient";
 
 const AddPatient: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
-    email: "",
+    birthDate: "",
+    gender: "",
     phone: "",
+    email: "",
     address: "",
-    medicalHistory: "",
+    condition: "",
+    appointments: [],
+    consultations: [],
+    transactions: [],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
-    navigate("/patients");
+    addPatient(formData);
   };
 
   const handleChange = (
@@ -77,8 +80,8 @@ const AddPatient: React.FC = () => {
                 </label>
                 <input
                   type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
+                  name="birthDate"
+                  value={formData.birthDate}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
@@ -129,8 +132,8 @@ const AddPatient: React.FC = () => {
                 Antécédents médicaux
               </label>
               <textarea
-                name="medicalHistory"
-                value={formData.medicalHistory}
+                name="condition"
+                value={formData.condition}
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

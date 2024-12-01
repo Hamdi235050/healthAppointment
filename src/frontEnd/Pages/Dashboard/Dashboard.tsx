@@ -1,8 +1,7 @@
 import React from "react";
-import { Outlet } from "react-router-dom"; // for nested routes
 import Sidebar from "./components/Sidebar";
-import StatsGrid from "./components/dashboard/StatsGrid";
 import AppointmentCard from "./components/appointments/AppointmentCard";
+import StatsGrid from "./components/dashboard/StatsGrid";
 import NoteCard from "./components/notes/NoteCard";
 import { Appointment, MedicalNote } from "./types";
 
@@ -53,11 +52,41 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex   h-screen">
       <Sidebar />
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 overflow-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          Tableau de Bord
+        </h1>
+
         <StatsGrid />
-        <Outlet />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Rendez-vous à venir
+            </h2>
+            <div className="space-y-4">
+              {appointments.map((appointment) => (
+                <AppointmentCard
+                  key={appointment.id}
+                  appointment={appointment}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Notes Récentes
+            </h2>
+            <div className="space-y-4">
+              {notes.map((note) => (
+                <NoteCard key={note.id} note={note} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

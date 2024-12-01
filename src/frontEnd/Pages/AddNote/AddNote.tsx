@@ -1,28 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FileText, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Dashboard/components/Sidebar";
+import { getPatientData } from "../../../backEnd/getPatients";
+import { Patient } from "../Dashboard/Patients";
+import { submitNote } from "../../../backEnd/postNoteMedical";
 
 const AddNote: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    patientId: "",
-    content: "",
+    dateAjout: "",
+    contenu: "",
+    observations: "",
     diagnosis: "",
     prescription: "",
-    followUp: "",
+    suivi: "",
+    patient: {
+      id: 0,
+    },
   });
 
-  const patients = [
-    { id: "1", name: "Jean Dupont" },
-    { id: "2", name: "Marie Martin" },
-    { id: "3", name: "Pierre Bernard" },
-  ];
+  const [patients, setPatients] = useState<Patient[]>([]);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const data = await getPatientData();
+      setPatients(data);
+    };
+
+    fetchPatients();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Note submitted:", formData);
-    navigate("/patients");
+    submitNote(formData);
   };
 
   const handleChange = (
@@ -30,10 +42,22 @@ const AddNote: React.FC = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    if (name === "patient_id") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        patient: {
+          ...prevFormData.patient,
+          id: value ? parseInt(value) : 0,
+        },
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
   };
 
   return (
@@ -54,8 +78,8 @@ const AddNote: React.FC = () => {
                 Patient
               </label>
               <select
-                name="patientId"
-                value={formData.patientId}
+                name="patient_id"
+                value={formData.patient.id}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -74,8 +98,8 @@ const AddNote: React.FC = () => {
                 Observations
               </label>
               <textarea
-                name="content"
-                value={formData.content}
+                name="observations"
+                value={formData.observations}
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -119,8 +143,8 @@ const AddNote: React.FC = () => {
               </label>
               <input
                 type="text"
-                name="followUp"
-                value={formData.followUp}
+                name="suivi"
+                value={formData.suivi}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Ex: Prochain rendez-vous dans 2 semaines"
