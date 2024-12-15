@@ -5,8 +5,7 @@ export const submitNote = async (formData: noteType) => {
     const token = localStorage.getItem("authToken");
     console.log("Form Data:", formData);
 
-    // Check if authToken is available
-    if (!token) {
+     if (!token) {
         toast.error("Authentication token is missing");
         return;
     }

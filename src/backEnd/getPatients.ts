@@ -21,6 +21,7 @@ export const getPatientData = async () => {
         Authorization: `Bearer ${token}`,  
       },
     });
+    console.log('Patient data:', response.data);  
     return response.data;  
   } catch (error) {
     console.error('There was an error fetching the patients!', error);

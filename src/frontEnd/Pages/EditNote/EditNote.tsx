@@ -1,41 +1,71 @@
-import React, { useState, useEffect } from "react";
 import { FileText, Save } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getNoteData } from "../../../backEnd/getNoteData";
+import { noteType } from "../../../backEnd/type";
 import Sidebar from "../Dashboard/components/Sidebar";
+import { PatientEditType } from "../EditPatient/EditPatientType";
+import { getPatientData } from "../../../backEnd/getPatients";
+import { updateNote } from "../../../backEnd/submitNote";
 
 const EditNote: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const [notes, setNotes] = useState<any[]>([]);
+  const [selected, setSelected] = useState<string>("");
+  const [patientsData, setPatients] = useState<PatientEditType[]>([]);
+
   const [formData, setFormData] = useState({
-    patientId: "",
-    content: "",
+    patient: {
+      patientId: "",
+    },
+    contenu: "",
     diagnosis: "",
     prescription: "",
-    followUp: "",
+    noteId: 0,
+    suivi: "",
+    dateAjout: "",
   });
 
-  // Mock patient list
-  const patients = [
-    { id: "1", name: "Jean Dupont" },
-    { id: "2", name: "Marie Martin" },
-    { id: "3", name: "Pierre Bernard" },
-  ];
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const data = await getNoteData();
+      setNotes(data);
+      if (data.length > 0) {
+        setSelected(data[0]?.patient.id.toString());
+      }
+    };
+    fetchNotes();
+  }, []);
 
   useEffect(() => {
-    // Simulate fetching note data
-    setFormData({
-      patientId: "1",
-      content: "Patient présente des symptômes de grippe saisonnière.",
-      diagnosis: "Grippe saisonnière",
-      prescription: "Paracétamol 1000mg\nIbuprofène 400mg",
-      followUp: "Suivi dans une semaine si les symptômes persistent",
-    });
-  }, [id]);
+    const fetchPatientData = async () => {
+      const patientData = await getPatientData();
+      setPatients(patientData);
+    };
+    fetchPatientData();
+  }, []);
+  console.log(notes);
+  const filteredNote = notes.find(
+    (note) => note.patient?.id === parseInt(selected)
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    setFormData({
+      patient: {
+        patientId: filteredNote?.patient.id.toString(),
+      },
+      contenu: filteredNote?.contenu || "",
+      diagnosis: filteredNote?.diagnosis || "",
+      prescription: filteredNote?.prescription || "",
+      noteId: filteredNote?.noteId || 0,
+      suivi: filteredNote?.suivi || "",
+      dateAjout: filteredNote?.dateAjout || "",
+    });
+  }, [filteredNote]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Note updated:", formData);
-    navigate("/patients");
+    updateNote(formData);
   };
 
   const handleChange = (
@@ -43,11 +73,29 @@ const EditNote: React.FC = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    // For the nested patient.patientId field
+    if (name === "patient.patientId") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        patient: {
+          ...prevFormData.patient,
+          patientId: value,
+        },
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
   };
+
+  const patients = patientsData.map((patient) => ({
+    id: patient.id,
+    name: `${patient.firstName} ${patient.lastName}`,
+  }));
 
   return (
     <div className="flex w-screen h-screen">
@@ -67,9 +115,12 @@ const EditNote: React.FC = () => {
                 Patient
               </label>
               <select
-                name="patientId"
-                value={formData.patientId}
-                onChange={handleChange}
+                name="patient.patientId"
+                value={formData.patient.patientId}
+                onChange={(e) => {
+                  setSelected(e.target.value);
+                  handleChange(e);
+                }}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               >
@@ -87,8 +138,8 @@ const EditNote: React.FC = () => {
                 Observations
               </label>
               <textarea
-                name="content"
-                value={formData.content}
+                name="contenu"
+                value={formData.contenu}
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -132,8 +183,8 @@ const EditNote: React.FC = () => {
               </label>
               <input
                 type="text"
-                name="followUp"
-                value={formData.followUp}
+                name="suivi"
+                value={formData.suivi}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Ex: Prochain rendez-vous dans 2 semaines"

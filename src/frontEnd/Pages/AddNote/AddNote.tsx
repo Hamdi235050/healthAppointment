@@ -10,7 +10,7 @@ const AddNote: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     dateAjout: "",
-    contenu: "",
+    content: "",
     observations: "",
     diagnosis: "",
     prescription: "",
@@ -98,8 +98,8 @@ const AddNote: React.FC = () => {
                 Observations
               </label>
               <textarea
-                name="observations"
-                value={formData.observations}
+                name="content"
+                value={formData.content}
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

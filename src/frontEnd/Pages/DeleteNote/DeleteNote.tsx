@@ -3,13 +3,18 @@ import { FileText, AlertTriangle, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Dashboard/components/Sidebar";
 import { getNoteData } from "../../../backEnd/getNoteData";
-import { getPatientById } from "../../../backEnd/getPatientById";
+import { PatientEditType } from "../EditPatient/EditPatientType";
+import { getPatientData } from "../../../backEnd/getPatients";
+import { deleteNote } from "../../../backEnd/deleteNote";
 
 interface Note {
-  id: number;
+  noteId: number;
   patientName: string;
-  date: string;
+  dateAdded: string;
   content: string;
+  patientId: number;
+  contenu?: string;
+  id?: string;
 }
 
 const DeleteNote: React.FC = () => {
@@ -18,20 +23,31 @@ const DeleteNote: React.FC = () => {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
   const [notes, setNotes] = useState<Note[]>([]);
-
+  const [patients, setPatients] = useState<PatientEditType[]>([]);
   useEffect(() => {
     const fetchPatientData = async () => {
-      const notes: Note[] = await getNoteData();
-      const list = notes.map((note) => ({
-        id: note.id,
-        patientName: note.patient,
-        date: note.dateDajout.toString(),
+      const patientData = await getPatientData();
+      setPatients(patientData);
+    };
+    fetchPatientData();
+  }, []);
+  console.log({ notes });
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      const notes = await getNoteData();
+      const list: Note[] = notes.map((note) => ({
+        id: note.noteId,
+        patientName: patients.find((p) => p.id === note.patient.id)?.firstName,
+        patientId: note.patient.id,
+        dateAdded:
+          new Date(note.dateAjout).toLocaleDateString("fr") ??
+          new Date().toLocaleDateString(),
         content: note.contenu,
       }));
       setNotes(list);
     };
     fetchPatientData();
-  }, []);
+  }, [notes]);
 
   console.log({ notes });
 
@@ -43,8 +59,8 @@ const DeleteNote: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedNote) {
-      console.log("Deleting note:", selectedNote);
-      navigate("/patients");
+      deleteNote(selectedNote.id);
+      setSelectedNote(null);
     }
   };
 
@@ -81,11 +97,11 @@ const DeleteNote: React.FC = () => {
               Notes Médicales
             </h2>
             <div className="space-y-2">
-              {filteredNotes.map((note) => (
+              {filteredNotes.map((note, index) => (
                 <div
-                  key={note.id}
+                  key={index}
                   className={`p-4 rounded-lg cursor-pointer transition-colors ${
-                    selectedNote?.id === note.id
+                    selectedNote?.id === note?.id
                       ? "bg-red-50 border-2 border-red-200"
                       : "bg-gray-50 hover:bg-gray-100"
                   }`}
@@ -95,9 +111,7 @@ const DeleteNote: React.FC = () => {
                     <p className="font-medium text-gray-800">
                       {note.patientName}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      {new Date(note.date).toLocaleDateString()}
-                    </p>
+                    <p className="text-sm text-gray-600">{note?.dateAdded}</p>
                   </div>
                   <p className="text-sm text-gray-600">{note.content}</p>
                 </div>

@@ -12,13 +12,13 @@ const Appointments: React.FC = () => {
     const fetchAppointments = async () => {
       const data = await getAppointmentsData();
       const list = data.map((appointment: Appointment) => ({
-        id: appointment.id,
-        patientName: appointment.patientName || "Unknown Patient",
-        time: appointment.appointmentDate
-          ? new Date(appointment.appointmentDate).toLocaleTimeString()
+        id: appointment?.id,
+        patientName: appointment?.patientName || "Unknown Patient",
+        time: appointment?.appointmentDate
+          ? new Date(appointment?.appointmentDate).toLocaleTimeString()
           : "Invalid Date",
-        type: appointment.type,
-        status: appointment.status,
+        type: appointment?.type,
+        status: appointment?.status,
       }));
       setAppointments(list);
     };

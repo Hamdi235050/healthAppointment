@@ -8,7 +8,7 @@ import { deletePatient } from "../../../backEnd/deletePatient";
 interface Patient {
   id: number;
   name: string;
-  dateOfBirth: string;
+  birthDate: Date;
   email: string;
 }
 
@@ -25,7 +25,6 @@ const DeletePatient: React.FC = () => {
     };
     fetchPatientData();
   }, []);
-
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -34,6 +33,7 @@ const DeletePatient: React.FC = () => {
     if (selectedPatient) {
       console.log("Deleting patient:", selectedPatient);
       deletePatient(selectedPatient.id);
+      setSelectedPatient(null);
       window.location.reload();
     }
   };
@@ -83,8 +83,7 @@ const DeletePatient: React.FC = () => {
                 >
                   <p className="font-medium text-gray-800">{patient.name}</p>
                   <p className="text-sm text-gray-600">
-                    Né(e) le:{" "}
-                    {new Date(patient.dateOfBirth).toLocaleDateString()}
+                    Né(e) le: {new Date(patient.birthDate).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-600">{patient.email}</p>
                 </div>

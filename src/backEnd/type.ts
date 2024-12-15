@@ -4,6 +4,7 @@ export type noteType = {
     observations: string,
     diagnosis: string,
     prescription: string,
+    noteId: number,
     suivi: string,
     patient: {
       id: number,
@@ -11,15 +12,15 @@ export type noteType = {
   }
 
   export type patientType = {
-
-     firstName: string;
+    id: string
+    firstName: string;
     lastName: string;
-    birthDate: string; // Or use Date if you want to store it as a Date object
-    gender: "Male" | "Female" | "Other"; // You can refine this based on possible values
+    birthDate: Date | null; // Or use Date if you want to store it as a Date object
+    gender?: "Male" | "Female" | "Other"; // You can refine this based on possible values
     phone: string;
     email: string;
     address: string;
-    condition: string; // You might want to use a more specific type if the conditions are known
+    condition?: string; // You might want to use a more specific type if the conditions are known
     appointments:  [];
     consultations:  [];
     transactions:  [];

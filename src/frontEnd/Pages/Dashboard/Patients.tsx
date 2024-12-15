@@ -1,14 +1,22 @@
+import { Search, Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Users, Search } from "lucide-react";
+import { getPatientData } from "../../../backEnd/getPatients";
+import { patientType } from "../../../backEnd/type";
 import Sidebar from "./components/Sidebar";
-import { getPatientData, mapPatientData } from "../../../backEnd/getPatients";
+import { getConsultationData } from "../../../backEnd/getLatestVisit";
 
 export type Patient = {
   id: number;
   name: string;
-  age: number;
+  birthDate: number;
   lastVisit: Date;
   condition: string;
+};
+type lastVisit = {
+  id: number;
+  consultationDate: Date;
+  motif: string;
+  result: string;
 };
 
 const Patients: React.FC = () => {
@@ -18,15 +26,26 @@ const Patients: React.FC = () => {
     const fetchPatients = async () => {
       try {
         const patientData = await getPatientData();
-        const list = patientData.map((patient: Patient) => ({
-          id: patient.id,
-          name: patient.name,
-          age: patient.age,
-          lastVisit: patient.lastVisit
-            ? new Date(patient.lastVisit).toLocaleDateString()
-            : "Unknown",
-          condition: patient.condition,
-        }));
+        const list = await Promise.all(
+          patientData.map(async (patient: patientType) => {
+            const [lastVisit]: lastVisit[] = await getConsultationData({
+              patientId: patient.id,
+            });
+            console.log({ lastVisit });
+            return {
+              id: patient.id,
+              name: patient.firstName + " " + patient.lastName,
+              age: patient.birthDate
+                ? new Date().getFullYear() -
+                  new Date(patient.birthDate).getFullYear()
+                : "Non Spécifier",
+              lastVisit: lastVisit?.consultationDate
+                ? new Date(lastVisit?.consultationDate).toLocaleDateString()
+                : "Non Spécifier",
+              condition: patient.condition,
+            };
+          })
+        );
         setPatients(list); // Update the state with mapped data
       } catch (error) {
         console.error("Error fetching patient data:", error);
@@ -102,8 +121,10 @@ const Patients: React.FC = () => {
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4">{patient.name}</td>
-                  <td className="py-3 px-4">{patient.age} ans</td>
-                  <td className="py-3 px-4">{patient.lastVisit}</td>
+                  <td className="py-3 px-4">{patient.birthDate} ans</td>
+                  <td className="py-3 px-4">
+                    {patient.lastVisit.toLocaleString()}
+                  </td>
                   <td className="py-3 px-4">{patient.condition}</td>
                 </tr>
               ))}

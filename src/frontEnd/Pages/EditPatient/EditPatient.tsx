@@ -1,40 +1,60 @@
-import React, { useState, useEffect } from "react";
-import { UserCog, Save } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Save, UserCog } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getPatientData } from "../../../backEnd/getPatients";
 import Sidebar from "../Dashboard/components/Sidebar";
+import { PatientEditType } from "./EditPatientType";
+import { updatePatient } from "../../../backEnd/editPatients";
+import { patientType } from "../../../backEnd/type";
 
 const EditPatient: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [formData, setFormData] = useState({
+  const [patients, setPatients] = useState<PatientEditType[]>([]);
+  const [selected, setSelected] = useState<string>("");
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      const patientData = await getPatientData();
+      setPatients(patientData);
+    };
+    fetchPatientData();
+  }, []);
+  const [filteredPatients] = patients.filter(
+    (patient) => patient.id === parseInt(selected)
+  );
+  console.log({ filteredPatients });
+  const [formData, setFormData] = useState<patientType>({
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
+    id: "",
+    birthDate: null,
     email: "",
     phone: "",
     address: "",
-    medicalHistory: "",
+    appointments: [],
+    consultations: [],
+    transactions: [],
   });
 
   useEffect(() => {
-    // Simulate fetching patient data
-    // In a real app, you would fetch the patient data based on the ID
     setFormData({
-      firstName: "Jean",
-      lastName: "Dupont",
-      dateOfBirth: "1980-01-01",
-      email: "jean.dupont@email.com",
-      phone: "0123456789",
-      address: "123 Rue de Paris",
-      medicalHistory: "Hypertension, Diabète type 2",
+      firstName: filteredPatients?.firstName,
+      lastName: filteredPatients?.lastName,
+      id: filteredPatients?.id.toString(),
+      birthDate: filteredPatients?.birthDate
+        ? filteredPatients.birthDate
+        : new Date(),
+      email: filteredPatients?.email,
+      phone: filteredPatients?.phone,
+      address: filteredPatients?.address,
+      appointments: [],
+      consultations: [],
+      transactions: [],
     });
-  }, [id]);
+  }, [filteredPatients]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
-    navigate("/patients");
+    updatePatient(formData);
   };
 
   const handleChange = (
@@ -56,6 +76,24 @@ const EditPatient: React.FC = () => {
             Modifier le Patient
           </h1>
         </div>
+
+        <select
+          className="mb-4 px-4 py-2 border border-gray-200 text-black rounded-lg cursor-pointer"
+          onChange={(e) => {
+            setSelected(e.target.value);
+          }}
+          defaultValue={patients[0]?.id}
+        >
+          {patients.map((patient) => (
+            <option
+              key={patient.id}
+              value={patient.id}
+              className="cursor-pointer"
+            >
+              {patient.name}
+            </option>
+          ))}
+        </select>
 
         <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 max-w-3xl">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -92,8 +130,8 @@ const EditPatient: React.FC = () => {
                 </label>
                 <input
                   type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
+                  name="birthDate"
+                  value={formData.birthDate}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
@@ -143,13 +181,13 @@ const EditPatient: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Antécédents médicaux
               </label>
-              <textarea
+              {/* <textarea
                 name="medicalHistory"
-                value={formData.medicalHistory}
+                value={formData.}
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              /> */}
             </div>
             <div className="flex justify-end space-x-4">
               <button
