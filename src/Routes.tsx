@@ -14,6 +14,9 @@ import EditPatient from "./frontEnd/Pages/EditPatient/EditPatient";
 import AddNote from "./frontEnd/Pages/AddNote/AddNote";
 import DeleteNote from "./frontEnd/Pages/DeleteNote/DeleteNote";
 import EditNote from "./frontEnd/Pages/EditNote/EditNote";
+import NewAppointment from "./frontEnd/Pages/Dashboard/components/appointments/NewAppointment";
+import PatientProfile from "./frontEnd/Pages/ProfilePatient/ProfilePatient";
+import EditAppointment from "./frontEnd/Pages/Dashboard/components/appointments/EditAppointment";
 export default () => {
   const userRoles = {
     ADMIN: "admin",
@@ -69,7 +72,17 @@ export default () => {
     {
       path: "/Dashboard/appointments",
       element: <Appointments />,
-      roles: [userRoles.ADMIN],
+      roles: [userRoles.ADMIN, userRoles.PATIENT],
+    },
+    {
+      path: "/Dashboard/NewAppointments",
+      element: <NewAppointment />,
+      roles: [userRoles.ADMIN, userRoles.PATIENT],
+    },
+    {
+      path: "/Dashboard/EditAppointment",
+      element: <EditAppointment />,
+      roles: [userRoles.ADMIN, userRoles.PATIENT],
     },
     {
       path: "/Dashboard/Statistics",
@@ -100,6 +113,11 @@ export default () => {
       path: "/",
       element: <Accueil />,
       roles: [userRoles.PATIENT, userRoles.DOCTOR, userRoles.ADMIN],
+    },
+    {
+      path: "/Dashboard/profile",
+      element: <PatientProfile />,
+      roles: [userRoles.PATIENT],
     },
   ];
   const role = useUserRole();

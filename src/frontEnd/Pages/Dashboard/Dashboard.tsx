@@ -12,21 +12,21 @@ const Dashboard: React.FC = () => {
       patientName: "Jean Dupont",
       time: "14:30",
       type: "Consultation générale",
-      status: "confirmed",
+      status: "CANCELLED",
     },
     {
       id: 2,
       patientName: "Marie Martin",
       time: "15:00",
       type: "Suivi",
-      status: "pending",
+      status: "SCHEDULED",
     },
     {
       id: 3,
       patientName: "Pierre Bernard",
       time: "16:15",
       type: "Consultation urgente",
-      status: "confirmed",
+      status: "CONFIRMED",
     },
   ];
 

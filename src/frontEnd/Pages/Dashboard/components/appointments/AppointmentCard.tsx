@@ -6,9 +6,9 @@ interface AppointmentCardProps {
 }
 
 const statusStyles = {
-  confirmed: "text-green-700 bg-green-100",
+  CONFIRMED: "text-green-700 bg-green-100",
   SCHEDULED: "text-yellow-700 bg-yellow-100",
-  cancelled: "text-red-700 bg-red-100",
+  CANCELLED: "text-red-700 bg-red-100",
 };
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => (

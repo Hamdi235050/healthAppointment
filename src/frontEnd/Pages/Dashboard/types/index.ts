@@ -18,7 +18,7 @@ export interface Appointment {
   appointmentDate?: string;
   time: string;
   type: string;
-  status:  "SCHEDULED" |  "COMPLETED" |  "CANCELLED"
+  status:  "SCHEDULED" |  "CONFIRMED" |  "CANCELLED"
 }
 
 export interface MedicalNote {

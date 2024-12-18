@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import login from "../../backEnd/getData";
-import { getAppointmentsData } from "../../backEnd/getDataAppointments";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -40,7 +39,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen pt-16 pb-12 flex flex-col bg-gradient-to-br from-blue-50 to-white">
+    <div
+      className="min-h-screen pt-16 pb-12 flex flex-col bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/rendezVousSente/src/assets/background.png')",
+      }}
+    >
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
           <div className="text-center">

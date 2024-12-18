@@ -8,12 +8,13 @@ import {
   Home,
   LogOut,
   Settings as SettingsIcon,
+  User,
   UserCog,
   UserMinus,
   UserPlus,
   Users,
 } from "lucide-react";
-import { useState } from "react";
+import { Profiler, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getRole, logout } from "../../../../backEnd/getData";
 
@@ -29,10 +30,28 @@ const Sidebar = () => {
       roles: ["ADMIN", "DOCTOR"],
     },
     {
+      path: "/Dashboard/newAppointments",
+      icon: <Home size={20} />,
+      label: "Nouveau Rendez-vous",
+      roles: ["ADMIN", "PATIENT"],
+    },
+    {
       path: "/Dashboard/appointments",
       icon: <Calendar size={20} />,
       label: "Liste des rendez-vous",
-      roles: ["ADMIN", "DOCTOR"],
+      roles: ["ADMIN", "PATIENT"],
+    },
+    {
+      path: "/Dashboard/editAppointment",
+      icon: <Calendar size={20} />,
+      label: "Editer les rendez-vous",
+      roles: ["PATIENT"],
+    },
+    {
+      path: "/Dashboard/profile",
+      icon: <User size={20} />,
+      label: "Profile",
+      roles: ["PATIENT"],
     },
     {
       path: "/Dashboard/patients",
