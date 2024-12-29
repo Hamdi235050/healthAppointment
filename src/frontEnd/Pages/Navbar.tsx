@@ -36,9 +36,7 @@ export default function Navbar() {
             >
               Notre Équipe
             </a>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-              Prendre RDV
-            </button>
+
             <button
               onClick={() => navigate("/login")}
               className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"

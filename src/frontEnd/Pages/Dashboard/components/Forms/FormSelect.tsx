@@ -4,14 +4,18 @@ interface FormSelectProps {
   label: string;
   options: string[];
   className?: string;
-  defaultValue?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  name: string; // Add name prop for identifying the select input
 }
 
 export default function FormSelect({
   label,
   options,
   className = "",
-  defaultValue,
+  value,
+  onChange,
+  name,
 }: FormSelectProps) {
   return (
     <div className={className}>
@@ -19,11 +23,15 @@ export default function FormSelect({
         {label}
       </label>
       <select
-        defaultValue={defaultValue}
+        name={name} // Pass name prop to the select element
+        value={value}
+        onChange={onChange}
         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       >
         {options.map((option, index) => (
-          <option key={index}>{option}</option>
+          <option key={index} value={option}>
+            {option}
+          </option>
         ))}
       </select>
     </div>

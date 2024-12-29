@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Calendar } from "lucide-react";
 import { Appointment } from "./types";
 import AppointmentCard from "./components/appointments/AppointmentCard";
 import Sidebar from "./components/Sidebar";
 import { getAppointmentsData } from "../../../backEnd/getDataAppointments";
+import getCurrentUser from "../../../backEnd/getCurrentUser";
+import { getRole } from "../../../backEnd/getData";
+import { getAppointmentsDataById } from "../../../backEnd/getAppointmentByPatientId";
 
 const Appointments: React.FC = () => {
   const [appointments, setAppointments] = React.useState<Appointment[]>([]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchAppointments = async () => {
-      const data = await getAppointmentsData();
+      const currentUser = await getCurrentUser();
+      const role = await getRole();
+      const data =
+        role !== "PATIENT"
+          ? await getAppointmentsData()
+          : await getAppointmentsDataById({ patientId: currentUser });
+      console.log({ data });
       const list = data.map((appointment: Appointment) => ({
         id: appointment?.id,
         patientName: appointment?.patientName || "Unknown Patient",
@@ -24,7 +32,7 @@ const Appointments: React.FC = () => {
     };
 
     fetchAppointments();
-  }, []);
+  }, [getCurrentUser, getAppointmentsData, getAppointmentsDataById]);
 
   return (
     <div className="flex h-screen w-screen">

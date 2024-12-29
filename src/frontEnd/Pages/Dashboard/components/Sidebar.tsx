@@ -14,23 +14,41 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import { Profiler, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getRole, logout } from "../../../../backEnd/getData";
+import getCurrentUser from "../../../../backEnd/getCurrentUser";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const userRole = getRole() || "";
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        const role = await getRole();
+        setRole(role);
+        setUser(currentUser); // Store the user data in state
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      }
+    };
+
+    fetchUser(); // Call the function when the component mounts
+  }, []);
+  console.log({ role });
   const menuItems = [
     {
       path: "/Dashboard/home",
       icon: <Home size={20} />,
       label: "Page d'accueil",
-      roles: ["ADMIN", "DOCTOR"],
+      roles: ["ADMIN"],
     },
     {
-      path: "/Dashboard/newAppointments",
+      path: `/Dashboard/NewAppointment/${user}`,
       icon: <Home size={20} />,
       label: "Nouveau Rendez-vous",
       roles: ["ADMIN", "PATIENT"],
@@ -46,6 +64,7 @@ const Sidebar = () => {
       icon: <Calendar size={20} />,
       label: "Editer les rendez-vous",
       roles: ["PATIENT"],
+      subItems: [],
     },
     {
       path: "/Dashboard/profile",

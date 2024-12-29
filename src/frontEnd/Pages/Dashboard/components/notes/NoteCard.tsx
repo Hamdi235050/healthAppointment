@@ -1,18 +1,21 @@
-import React from 'react';
-import { MedicalNote } from '../../types';
+import React from "react";
+import { MedicalNote } from "../../types";
+import { noteType } from "../../../../../backEnd/type";
 
 interface NoteCardProps {
-  note: MedicalNote;
+  note: noteType;
 }
 
 const NoteCard: React.FC<NoteCardProps> = ({ note }) => (
   <div className="p-4 bg-gray-50 rounded-lg">
     <div className="flex items-center justify-between mb-2">
-      <p className="font-medium text-gray-800">{note.patientName}</p>
-      <span className="text-sm text-gray-600">{note.timestamp}</span>
+      <p className="font-medium text-gray-800">
+        {note.patient?.firstName + " " + note?.patient?.lastName}
+      </p>
+      <span className="text-sm text-gray-600">{note.hoursElapsed}</span>
     </div>
-    <p className="text-sm text-gray-600">{note.content}</p>
+    <p className="text-sm text-gray-600">{note.contenu}</p>
   </div>
-)
+);
 
 export default NoteCard;

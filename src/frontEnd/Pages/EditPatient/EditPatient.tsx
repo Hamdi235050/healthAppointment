@@ -34,6 +34,7 @@ const EditPatient: React.FC = () => {
     consultations: [],
     transactions: [],
   });
+  console.log({ selected });
 
   useEffect(() => {
     setFormData({
@@ -42,7 +43,8 @@ const EditPatient: React.FC = () => {
       id: filteredPatients?.id.toString(),
       birthDate: filteredPatients?.birthDate
         ? filteredPatients.birthDate
-        : new Date(),
+        : new Date().toISOString().split("T")[0],
+
       email: filteredPatients?.email,
       phone: filteredPatients?.phone,
       address: filteredPatients?.address,
@@ -60,6 +62,7 @@ const EditPatient: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    console.log({ formData });
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -80,10 +83,12 @@ const EditPatient: React.FC = () => {
         <select
           className="mb-4 px-4 py-2 border border-gray-200 text-black rounded-lg cursor-pointer"
           onChange={(e) => {
+            console.log(e.target.value);
             setSelected(e.target.value);
           }}
-          defaultValue={patients[0]?.id}
+          defaultValue=""
         >
+          <option value="">Sélectionner un patient</option>
           {patients.map((patient) => (
             <option
               key={patient.id}
@@ -131,7 +136,13 @@ const EditPatient: React.FC = () => {
                 <input
                   type="date"
                   name="birthDate"
-                  value={formData.birthDate}
+                  value={
+                    formData.birthDate
+                      ? new Date(formData.birthDate as string | number | Date)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required

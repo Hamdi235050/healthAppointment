@@ -1,16 +1,54 @@
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { submitAppointment } from "../../../../../backEnd/submitAppointment";
 import FormInput from "../Forms/FormInput";
 import FormSelect from "../Forms/FormSelect";
 import FormTextarea from "../Forms/FormTextArea";
 import Sidebar from "../Sidebar";
 
-const consultationTypes = [
-  "Consultation générale",
-  "Suivi",
-  "Contrôle",
-  "Urgence",
-];
+const consultationTypes = ["CONSULTATION", "ROUTINE_CHECK", "EMERGENCY"];
 
 export default function NewAppointment() {
+  const { id } = useParams();
+  const [formData, setFormData] = useState({
+    appointmentDate: "",
+    type: "CONSULTATION",
+    notes: "",
+    status: "SCHEDULED",
+    patient: { id: parseInt(id!) },
+  });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log({ formData });
+    submitAppointment(formData);
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData({
+      ...formData,
+      appointmentDate: value + "T" + formData.appointmentDate.split("T")[1], // Update date part
+    });
+  };
+
+  const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData({
+      ...formData,
+      appointmentDate: formData.appointmentDate.split("T")[0] + "T" + value, // Update hour part
+    });
+  };
+  console.log({ formData });
   return (
     <div className="flex h-screen">
       <Sidebar />
@@ -19,22 +57,41 @@ export default function NewAppointment() {
           Créer un Rendez-vous
         </h1>
 
-        <form className="space-y-6 h-full flex flex-col justify-between">
-          <FormInput label="Patient" placeholder="Nom du patient" />
-
+        <form
+          className="space-y-6 h-full flex flex-col"
+          onSubmit={handleSubmit}
+        >
           <div className="grid grid-cols-2 gap-4">
-            <FormInput label="Date" type="date" />
-            <FormInput label="Heure" type="time" />
+            <FormInput
+              label="Date"
+              type="date"
+              name="appointmentDate"
+              value={formData.appointmentDate.split("T")[0]} // Display only the date part
+              onChange={handleDateChange}
+            />
+            <FormInput
+              label="Heure"
+              type="time"
+              name="appointmentDate"
+              value={formData.appointmentDate.split("T")[1]} // Display only the hour part
+              onChange={handleHourChange}
+            />
           </div>
 
           <FormSelect
             label="Type de consultation"
+            name="type"
             options={consultationTypes}
+            value={formData.type}
+            onChange={handleChange}
           />
 
           <FormTextarea
             label="Notes"
+            name="notes"
             placeholder="Informations supplémentaires..."
+            value={formData.notes}
+            onChange={handleChange}
           />
 
           <button

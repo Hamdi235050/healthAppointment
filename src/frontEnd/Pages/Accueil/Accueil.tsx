@@ -1,9 +1,8 @@
-import React from "react";
+import Footer from "../Footer";
 import Hero from "../Hero";
+import Navbar from "../Navbar";
 import Services from "../Services";
 import Team from "../Team";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
 
 interface Doctor {
   id: number;

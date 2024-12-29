@@ -4,55 +4,27 @@ import AppointmentCard from "./components/appointments/AppointmentCard";
 import StatsGrid from "./components/dashboard/StatsGrid";
 import NoteCard from "./components/notes/NoteCard";
 import { Appointment, MedicalNote } from "./types";
+import getTodayAppointment from "../../../backEnd/getTodayAppointment";
+import getTodayNotes from "../../../backEnd/getTodayNotes";
 
 const Dashboard: React.FC = () => {
-  const appointments: Appointment[] = [
-    {
-      id: 1,
-      patientName: "Jean Dupont",
-      time: "14:30",
-      type: "Consultation générale",
-      status: "CANCELLED",
-    },
-    {
-      id: 2,
-      patientName: "Marie Martin",
-      time: "15:00",
-      type: "Suivi",
-      status: "SCHEDULED",
-    },
-    {
-      id: 3,
-      patientName: "Pierre Bernard",
-      time: "16:15",
-      type: "Consultation urgente",
-      status: "CONFIRMED",
-    },
-  ];
+  const [todayAppointments, setTodayAppointments] = React.useState<
+    Appointment[]
+  >([]);
+  const [todayNotes, setTodayNotes] = React.useState<MedicalNote[]>([]);
+  React.useEffect(() => {
+    const fetchTodayAppointment = async () => {
+      const todayAppointments = await getTodayAppointment();
+      const todayNotes = await getTodayNotes();
+      setTodayNotes(todayNotes);
+      setTodayAppointments(todayAppointments);
+    };
 
-  const notes: MedicalNote[] = [
-    {
-      id: 1,
-      patientName: "Jean Dupont",
-      timestamp: "Il y a 1h",
-      content: "Suivi traitement hypertension - Tension stable",
-    },
-    {
-      id: 2,
-      patientName: "Marie Martin",
-      timestamp: "Il y a 2h",
-      content: "Renouvellement ordonnance - Traitement chronique",
-    },
-    {
-      id: 3,
-      patientName: "Pierre Bernard",
-      timestamp: "Il y a 3h",
-      content: "Consultation de contrôle - Evolution favorable",
-    },
-  ];
-
+    fetchTodayAppointment();
+  }, [getTodayAppointment, getTodayNotes]);
+  console.log({ todayNotes });
   return (
-    <div className="flex   h-screen">
+    <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 p-8 overflow-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">
@@ -67,7 +39,7 @@ const Dashboard: React.FC = () => {
               Rendez-vous à venir
             </h2>
             <div className="space-y-4">
-              {appointments.map((appointment) => (
+              {todayAppointments.map((appointment) => (
                 <AppointmentCard
                   key={appointment.id}
                   appointment={appointment}
@@ -81,7 +53,7 @@ const Dashboard: React.FC = () => {
               Notes Récentes
             </h2>
             <div className="space-y-4">
-              {notes.map((note) => (
+              {todayNotes?.map((note) => (
                 <NoteCard key={note.id} note={note} />
               ))}
             </div>

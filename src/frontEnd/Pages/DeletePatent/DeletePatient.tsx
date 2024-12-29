@@ -17,14 +17,14 @@ const DeletePatient: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patients, setPatients] = useState<Patient[]>([]);
-
+  console.log({ selectedPatient });
   useEffect(() => {
     const fetchPatientData = async () => {
       const patientData = await getPatientData();
       setPatients(patientData);
     };
     fetchPatientData();
-  }, []);
+  });
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -34,7 +34,6 @@ const DeletePatient: React.FC = () => {
       console.log("Deleting patient:", selectedPatient);
       deletePatient(selectedPatient.id);
       setSelectedPatient(null);
-      window.location.reload();
     }
   };
 
@@ -108,7 +107,7 @@ const DeletePatient: React.FC = () => {
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
-                  onClick={() => navigate("/patients")}
+                  onClick={() => setSelectedPatient(null)}
                   className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Annuler

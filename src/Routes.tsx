@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Accueil } from "./frontEnd/Pages/Accueil/Accueil";
 import Appointments from "./frontEnd/Pages/Dashboard/Appointments";
 import Dashboard from "./frontEnd/Pages/Dashboard/Dashboard";
 import Patients from "./frontEnd/Pages/Dashboard/Patients";
@@ -17,27 +14,42 @@ import EditNote from "./frontEnd/Pages/EditNote/EditNote";
 import NewAppointment from "./frontEnd/Pages/Dashboard/components/appointments/NewAppointment";
 import PatientProfile from "./frontEnd/Pages/ProfilePatient/ProfilePatient";
 import EditAppointment from "./frontEnd/Pages/Dashboard/components/appointments/EditAppointment";
+import { getRole } from "./backEnd/getData";
+import { useEffect, useState } from "react";
+import getCurrentUser from "./backEnd/getCurrentUser";
+import { Accueil } from "./frontEnd/Pages/Accueil/Accueil";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 export default () => {
   const userRoles = {
-    ADMIN: "admin",
-    DOCTOR: "doctor",
-    PATIENT: "patient",
+    ADMIN: "ADMIN",
+    DOCTOR: "DOCTOR",
+    PATIENT: "PATIENT",
   };
-  function useUserRole() {
-    const [role, setRole] = useState<string>("");
 
-    useEffect(() => {
-      setRole(userRoles.ADMIN);
-    }, []);
+  const [role, setRole] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const role = await getRole();
+        setRole(role);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      }
+    };
 
-    return role;
-  }
+    fetchUser();
+  }, [getRole, getCurrentUser]);
+
+  const hasAccess = (roles: string[]) => {
+    return roles.length === 0 || roles.includes(role!); // Check for no roles (i.e., accessible to all)
+  };
 
   const routesConfig = [
     {
       path: "/login",
       element: <Login />,
-      roles: [userRoles.PATIENT, userRoles.ADMIN],
+      roles: [],
     },
     {
       path: "/Dashboard/home",
@@ -75,7 +87,7 @@ export default () => {
       roles: [userRoles.ADMIN, userRoles.PATIENT],
     },
     {
-      path: "/Dashboard/NewAppointments",
+      path: "/Dashboard/NewAppointment/:id",
       element: <NewAppointment />,
       roles: [userRoles.ADMIN, userRoles.PATIENT],
     },
@@ -112,7 +124,7 @@ export default () => {
     {
       path: "/",
       element: <Accueil />,
-      roles: [userRoles.PATIENT, userRoles.DOCTOR, userRoles.ADMIN],
+      roles: [],
     },
     {
       path: "/Dashboard/profile",
@@ -120,11 +132,20 @@ export default () => {
       roles: [userRoles.PATIENT],
     },
   ];
-  const role = useUserRole();
+
   return (
     <BrowserRouter>
       <Routes>
         {routesConfig.map((route, index) => {
+          if (!hasAccess(route.roles)) {
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={<Navigate to="/login" />}
+              />
+            );
+          }
           return (
             <Route key={index} path={route.path} element={route.element} />
           );

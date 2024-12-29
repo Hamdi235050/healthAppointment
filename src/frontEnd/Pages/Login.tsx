@@ -1,26 +1,38 @@
 import { Lock, Mail } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import login from "../../backEnd/getData";
-
+import login, { getRole } from "../../backEnd/getData";
+import backgroundImage from "../../assets/background.png";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [role, setRole] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const role = await getRole();
+        setRole(role);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      }
+    };
 
+    fetchUser();
+  }, [getRole]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = login(email, password);
 
       setMessage((await response).data.message);
-      console.log((await response).data);
 
       if ((await response).status === 200) {
-        toast("success", {
+        toast("se connecter avec succes", {
           position: "top-right",
+          type: "success",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -28,7 +40,7 @@ export default function Login() {
           draggable: true,
           progress: undefined,
         });
-        navigate("/dashboard/home");
+        navigate(role === "ADMIN" ? "/Dashboard/home" : "/Dashboard/patients");
       }
     } catch (error) {
       toast.error("Mot de passe invalide", {
@@ -42,7 +54,7 @@ export default function Login() {
     <div
       className="min-h-screen pt-16 pb-12 flex flex-col bg-cover bg-center"
       style={{
-        backgroundImage: "url('/rendezVousSente/src/assets/background.png')",
+        backgroundImage: `url(${backgroundImage})`,
       }}
     >
       <div className="flex-grow flex items-center justify-center px-4">

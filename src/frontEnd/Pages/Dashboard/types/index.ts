@@ -7,7 +7,7 @@ export interface MenuItem {
 
 export interface StatCard {
   title: string;
-  value: string;
+  value: number;
   icon: JSX.Element;
   color?: string;
 }
@@ -15,6 +15,10 @@ export interface StatCard {
 export interface Appointment {
   id: number;
   patientName: string;
+  patient?: {
+    id?: null;
+    userId: number;
+};
   appointmentDate?: string;
   time: string;
   type: string;
