@@ -1,6 +1,5 @@
 import { Appointment } from "../../types";
 
-// Données de test
 const appointments: Appointment[] = [
     {
         id: 1,

@@ -1,5 +1,4 @@
 import React from "react";
-import { MedicalNote } from "../../types";
 import { noteType } from "../../../../../backEnd/type";
 
 interface NoteCardProps {

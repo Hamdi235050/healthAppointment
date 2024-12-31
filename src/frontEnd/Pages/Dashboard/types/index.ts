@@ -15,6 +15,7 @@ export interface StatCard {
 export interface Appointment {
   id: number;
   patientName: string;
+  notes?: string;
   patient?: {
     id?: null;
     userId: number;

@@ -31,14 +31,14 @@ const Sidebar = () => {
         const currentUser = await getCurrentUser();
         const role = await getRole();
         setRole(role);
-        setUser(currentUser); // Store the user data in state
+        setUser(currentUser);
       } catch (err) {
         console.error("Error fetching user:", err);
       }
     };
 
-    fetchUser(); // Call the function when the component mounts
-  }, []);
+    fetchUser();
+  }, [getCurrentUser, getRole]);
   console.log({ role });
   const menuItems = [
     {
@@ -51,7 +51,7 @@ const Sidebar = () => {
       path: `/Dashboard/NewAppointment/${user}`,
       icon: <Home size={20} />,
       label: "Nouveau Rendez-vous",
-      roles: ["ADMIN", "PATIENT"],
+      roles: ["PATIENT"],
     },
     {
       path: "/Dashboard/appointments",

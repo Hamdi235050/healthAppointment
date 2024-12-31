@@ -1,9 +1,8 @@
+import { AlertTriangle, Search, UserMinus } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { UserMinus, AlertTriangle, Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "../Dashboard/components/Sidebar";
-import { getPatientData } from "../../../backEnd/getPatients";
 import { deletePatient } from "../../../backEnd/deletePatient";
+import { getPatientData } from "../../../backEnd/getPatients";
+import Sidebar from "../Dashboard/components/Sidebar";
 
 interface Patient {
   id: number;
@@ -13,7 +12,6 @@ interface Patient {
 }
 
 const DeletePatient: React.FC = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -24,7 +22,7 @@ const DeletePatient: React.FC = () => {
       setPatients(patientData);
     };
     fetchPatientData();
-  });
+  }, []);
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );

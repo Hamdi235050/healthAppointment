@@ -13,7 +13,6 @@ const AddNote: React.FC = () => {
     content: "",
     observations: "",
     diagnosis: "",
-    prescription: "",
     suivi: "",
     patient: {
       id: 0,
@@ -120,20 +119,6 @@ const AddNote: React.FC = () => {
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
                 placeholder="Diagnostic..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Prescription
-              </label>
-              <textarea
-                name="prescription"
-                value={formData.prescription}
-                onChange={handleChange}
-                rows={3}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Prescriptions médicales..."
               />
             </div>
 

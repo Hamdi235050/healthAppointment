@@ -4,7 +4,7 @@ interface FormSelectProps {
   label: string;
   options: string[];
   className?: string;
-  value: string;
+  value: string | undefined;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   name: string; // Add name prop for identifying the select input
 }

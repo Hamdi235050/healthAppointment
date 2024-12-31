@@ -3,8 +3,7 @@ export type noteType = {
     contenu: string,
     observations: string,
     diagnosis: string,
-    prescription: string,
-    noteId: number,
+     noteId: number,
     hoursElapsed: number,
     suivi: string,
     patient: {
@@ -18,7 +17,7 @@ export type noteType = {
     id: string
     firstName: string;
     lastName: string;
-    birthDate: Date |String |  null; // Or use Date if you want to store it as a Date object
+    birthDate: Date |String | number |  null; // Or use Date if you want to store it as a Date object
     gender?: "Male" | "Female" | "Other"; // You can refine this based on possible values
     phone: string;
     email: string;

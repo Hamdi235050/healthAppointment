@@ -21,7 +21,7 @@ type lastVisit = {
 
 const Patients: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]); // You can replace `any` with a more specific type if needed
-
+  console.log({ patients });
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -35,10 +35,7 @@ const Patients: React.FC = () => {
             return {
               id: patient.id,
               name: patient.firstName + " " + patient.lastName,
-              age: patient.birthDate
-                ? new Date().getFullYear() -
-                  new Date(patient.birthDate).getFullYear()
-                : "Non Spécifier",
+              age: patient.birthDate ? patient.birthDate : "Non Spécifier",
               lastVisit: lastVisit?.consultationDate
                 ? new Date(lastVisit?.consultationDate).toLocaleDateString()
                 : "Non Spécifier",
@@ -54,29 +51,6 @@ const Patients: React.FC = () => {
 
     fetchPatients();
   }, []);
-  // const patients: Patient[] = [
-  //   {
-  //     id: 1,
-  //     name: "Jean Dupont",
-  //     age: 45,
-  //     lastVisit: "15/03/2024",
-  //     condition: "Hypertension",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Marie Martin",
-  //     age: 32,
-  //     lastVisit: "14/03/2024",
-  //     condition: "Diabète Type 2",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Pierre Bernard",
-  //     age: 58,
-  //     lastVisit: "13/03/2024",
-  //     condition: "Arthrose",
-  //   },
-  // ];
 
   return (
     <div className="flex h-screen w-screen">
@@ -121,7 +95,7 @@ const Patients: React.FC = () => {
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4">{patient.name}</td>
-                  <td className="py-3 px-4">{patient.birthDate} ans</td>
+                  <td className="py-3 px-4">{patient?.birthDate} ans</td>
                   <td className="py-3 px-4">
                     {patient.lastVisit.toLocaleString()}
                   </td>

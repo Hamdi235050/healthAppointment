@@ -2,11 +2,10 @@ import { FileText, Save } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNoteData } from "../../../backEnd/getNoteData";
-import { noteType } from "../../../backEnd/type";
-import Sidebar from "../Dashboard/components/Sidebar";
-import { PatientEditType } from "../EditPatient/EditPatientType";
 import { getPatientData } from "../../../backEnd/getPatients";
 import { updateNote } from "../../../backEnd/submitNote";
+import Sidebar from "../Dashboard/components/Sidebar";
+import { PatientEditType } from "../EditPatient/EditPatientType";
 
 const EditNote: React.FC = () => {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const EditNote: React.FC = () => {
     },
     contenu: "",
     diagnosis: "",
-    prescription: "",
+    observations: "",
     noteId: 0,
     suivi: "",
     dateAjout: "",
@@ -43,7 +42,7 @@ const EditNote: React.FC = () => {
       setPatients(patientData);
     };
     fetchPatientData();
-  }, []);
+  }, [getPatientData]);
   console.log(notes);
   const filteredNote = notes.find(
     (note) => note.patient?.id === parseInt(selected)
@@ -56,7 +55,7 @@ const EditNote: React.FC = () => {
       },
       contenu: filteredNote?.contenu || "",
       diagnosis: filteredNote?.diagnosis || "",
-      prescription: filteredNote?.prescription || "",
+      observations: filteredNote?.observations || "",
       noteId: filteredNote?.noteId || 0,
       suivi: filteredNote?.suivi || "",
       dateAjout: filteredNote?.dateAjout || "",
@@ -160,20 +159,6 @@ const EditNote: React.FC = () => {
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
                 placeholder="Diagnostic..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Prescription
-              </label>
-              <textarea
-                name="prescription"
-                value={formData.prescription}
-                onChange={handleChange}
-                rows={3}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Prescriptions médicales..."
               />
             </div>
 

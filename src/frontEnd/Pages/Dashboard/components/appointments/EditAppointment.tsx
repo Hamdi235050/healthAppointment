@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { getAppointmentsDataById } from "../../../../../backEnd/getAppointmentByPatientId";
 import getCurrentUser from "../../../../../backEnd/getCurrentUser";
@@ -13,8 +12,6 @@ import Sidebar from "../Sidebar";
 import { CONSULTATION_TYPES } from "./constant";
 
 export default function EditAppointment() {
-  const navigate = useNavigate();
-
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selected, setSelected] = useState<string>("");
 

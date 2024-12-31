@@ -53,9 +53,11 @@ const Dashboard: React.FC = () => {
               Notes Récentes
             </h2>
             <div className="space-y-4">
-              {todayNotes?.map((note) => (
-                <NoteCard key={note.id} note={note} />
-              ))}
+              {todayNotes?.length > 0 ? (
+                todayNotes.map((note) => <NoteCard key={note.id} note={note} />)
+              ) : (
+                <p className="text-gray-500">Aucune note récente</p>
+              )}
             </div>
           </div>
         </div>

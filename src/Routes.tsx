@@ -40,11 +40,10 @@ export default () => {
 
     fetchUser();
   }, [getRole, getCurrentUser]);
-
+  console.log({ role });
   const hasAccess = (roles: string[]) => {
     return roles.length === 0 || roles.includes(role!); // Check for no roles (i.e., accessible to all)
   };
-
   const routesConfig = [
     {
       path: "/login",
@@ -54,7 +53,7 @@ export default () => {
     {
       path: "/Dashboard/home",
       element: <Dashboard />,
-      roles: [userRoles.ADMIN],
+      roles: [userRoles.ADMIN, userRoles.PATIENT],
     },
     {
       path: "/Dashboard/patients",
@@ -136,20 +135,9 @@ export default () => {
   return (
     <BrowserRouter>
       <Routes>
-        {routesConfig.map((route, index) => {
-          if (!hasAccess(route.roles)) {
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={<Navigate to="/login" />}
-              />
-            );
-          }
-          return (
-            <Route key={index} path={route.path} element={route.element} />
-          );
-        })}
+        {routesConfig.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
       </Routes>
     </BrowserRouter>
   );
