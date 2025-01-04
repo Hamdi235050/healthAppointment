@@ -7,11 +7,6 @@ import { getRole } from "../../../../../backEnd/getData";
 import { getAppointmentsData } from "../../../../../backEnd/getDataAppointments";
 import { getAppointmentsDataById } from "../../../../../backEnd/getAppointmentByPatientId";
 import { Calendar } from "lucide-react";
-import { updateAppointment } from "../../../../../backEnd/editAppointments";
-import {
-  updateAppointmentByStatus,
-  updateAppointmentStatus,
-} from "../../../../../backEnd/editAppointmentsByStatus";
 
 export const AppointmentListAdmin = () => {
   const [appointments, setAppointments] = React.useState<Appointment[]>([]);
