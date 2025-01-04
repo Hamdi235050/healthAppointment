@@ -14,7 +14,7 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getRole, logout } from "../../../../backEnd/getData";
 import getCurrentUser from "../../../../backEnd/getCurrentUser";
@@ -22,11 +22,12 @@ import { getName } from "../../../../backEnd/getNameSettings";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const userRole = getRole() || "";
+  const userRole = useMemo(() => getRole() || "", []); // Memoize the user role
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [role, setRole] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -42,120 +43,128 @@ const Sidebar = () => {
     };
 
     fetchUser();
-  }, [getCurrentUser, getRole, getName]);
-  console.log({ name });
-  let formattedName = name.replace(/"/g, "");
+  }, []); // Empty dependency array means this runs once on mount
+
+  const formattedName = useMemo(() => name.replace(/"/g, ""), [name]);
 
   const two = formattedName.substring(0, 2);
-  const menuItems = [
-    {
-      path: "/Dashboard/home",
-      icon: <Home size={20} />,
-      label: "Page d'accueil",
-      roles: ["ADMIN"],
-    },
-    {
-      path: `/Dashboard/NewAppointment/${user}`,
-      icon: <Home size={20} />,
-      label: "Nouveau Rendez-vous",
-      roles: ["PATIENT"],
-    },
-    {
-      path: "/Dashboard/AppointmentsList",
-      icon: <Calendar size={20} />,
-      label: "Confirmer les rendez-vous",
-      roles: ["ADMIN"],
-    },
-    {
-      path: "/Dashboard/appointments",
-      icon: <Calendar size={20} />,
-      label: "Liste des rendez-vous",
-      roles: ["ADMIN", "PATIENT"],
-    },
-    {
-      path: "/Dashboard/editAppointment",
-      icon: <Calendar size={20} />,
-      label: "Editer les rendez-vous",
-      roles: ["PATIENT"],
-      subItems: [],
-    },
-    {
-      path: "/Dashboard/profile",
-      icon: <User size={20} />,
-      label: "Profile",
-      roles: ["PATIENT"],
-    },
-    {
-      path: "/Dashboard/patients",
-      icon: <Users size={20} />,
-      label: "Liste des Patients",
-      roles: ["ADMIN", "DOCTOR"],
-      subItems: [
-        {
-          path: "/Dashboard/patients/notes/add",
-          icon: <FileText size={20} />,
-          label: "Ajouter une Note",
-          roles: ["ADMIN", "DOCTOR"],
-        },
-        {
-          path: "/Dashboard/patients/notes/edit",
-          icon: <FileText size={20} />,
-          label: "Modifier une Note",
-          roles: ["ADMIN", "DOCTOR"],
-        },
-        {
-          path: "/Dashboard/patients/notes/delete",
-          icon: <FileText size={20} />,
-          label: "Supprimer une Note",
-          roles: ["ADMIN", "DOCTOR"],
-        },
-        {
-          path: "/Dashboard/patients/add",
-          icon: <UserPlus size={20} />,
-          label: "Ajouter un patient",
-          roles: ["ADMIN", "DOCTOR"],
-        },
-        {
-          path: "/Dashboard/patients/delete",
-          icon: <UserMinus size={20} />,
-          label: "Supprimer un patient",
-          roles: ["ADMIN", "DOCTOR"],
-        },
-        {
-          path: "/Dashboard/patients/edit",
-          icon: <UserCog size={20} />,
-          label: "Modifier un patient",
-          roles: ["ADMIN", "DOCTOR"],
-        },
-      ],
-    },
-    {
-      path: "/Dashboard/settings",
-      icon: <SettingsIcon size={20} />,
-      label: "Paramètres",
-      roles: ["ADMIN"],
-    },
-    {
-      path: "/Dashboard/statistics",
-      icon: <BarChart2 size={20} />,
-      label: "Statistiques",
-      roles: ["ADMIN", "user"],
-    },
-    {
-      path: "/Dashboard/transactions",
-      icon: <History size={20} />,
-      label: "Historique des transactions",
-      roles: ["ADMIN", "user"],
-    },
-  ];
 
-  const filteredMenuItems = menuItems.filter((item) => {
-    return userRole && item.roles.includes(userRole);
-  });
-  const handleLogout = () => {
+  const menuItems = useMemo(
+    () => [
+      {
+        path: "/Dashboard/home",
+        icon: <Home size={20} />,
+        label: "Page d'accueil",
+        roles: ["ADMIN"],
+      },
+      {
+        path: "/Dashboard/AppointmentsList",
+        icon: <Calendar size={20} />,
+        label: "Confirmer les rendez-vous",
+        roles: ["ADMIN"],
+      },
+      {
+        path: `/Dashboard/NewAppointment/${user}`,
+        icon: <Home size={20} />,
+        label: "Nouveau Rendez-vous",
+        roles: ["PATIENT"],
+      },
+      {
+        path: "/Dashboard/appointments",
+        icon: <Calendar size={20} />,
+        label: "Liste des rendez-vous",
+        roles: ["ADMIN", "PATIENT"],
+      },
+      {
+        path: "/Dashboard/editAppointment",
+        icon: <Calendar size={20} />,
+        label: "Editer les rendez-vous",
+        roles: ["PATIENT"],
+        subItems: [],
+      },
+      {
+        path: "/Dashboard/profile",
+        icon: <User size={20} />,
+        label: "Profile",
+        roles: ["PATIENT"],
+      },
+      {
+        path: "/Dashboard/patients",
+        icon: <Users size={20} />,
+        label: "Liste des Patients",
+        roles: ["ADMIN", "DOCTOR"],
+        subItems: [
+          {
+            path: "/Dashboard/patients/notes/add",
+            icon: <FileText size={20} />,
+            label: "Ajouter une Note",
+            roles: ["ADMIN", "DOCTOR"],
+          },
+          {
+            path: "/Dashboard/patients/notes/edit",
+            icon: <FileText size={20} />,
+            label: "Modifier une Note",
+            roles: ["ADMIN", "DOCTOR"],
+          },
+          {
+            path: "/Dashboard/patients/notes/delete",
+            icon: <FileText size={20} />,
+            label: "Supprimer une Note",
+            roles: ["ADMIN", "DOCTOR"],
+          },
+          {
+            path: "/Dashboard/patients/add",
+            icon: <UserPlus size={20} />,
+            label: "Ajouter un patient",
+            roles: ["ADMIN", "DOCTOR"],
+          },
+          {
+            path: "/Dashboard/patients/delete",
+            icon: <UserMinus size={20} />,
+            label: "Supprimer un patient",
+            roles: ["ADMIN", "DOCTOR"],
+          },
+          {
+            path: "/Dashboard/patients/edit",
+            icon: <UserCog size={20} />,
+            label: "Modifier un patient",
+            roles: ["ADMIN", "DOCTOR"],
+          },
+        ],
+      },
+      {
+        path: "/Dashboard/settings",
+        icon: <SettingsIcon size={20} />,
+        label: "Paramètres",
+        roles: ["ADMIN"],
+      },
+      {
+        path: "/Dashboard/statistics",
+        icon: <BarChart2 size={20} />,
+        label: "Statistiques",
+        roles: ["ADMIN", "user"],
+      },
+      {
+        path: "/Dashboard/transactions",
+        icon: <History size={20} />,
+        label: "Historique des transactions",
+        roles: ["ADMIN", "user"],
+      },
+    ],
+    [user]
+  );
+
+  const filteredMenuItems = useMemo(() => {
+    return menuItems.filter((item) => {
+      return userRole && item.roles.includes(userRole);
+    });
+  }, [menuItems, userRole]);
+
+  const handleLogout = useCallback(() => {
     logout();
     navigate("/login");
-  };
+  }, [navigate]); // Memoize the logout function
+
   return (
     <aside
       className={`${

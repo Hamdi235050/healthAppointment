@@ -82,11 +82,6 @@ export default () => {
       roles: [userRoles.ADMIN],
     },
     {
-      path: "/Dashboard/appointments",
-      element: <Appointments />,
-      roles: [userRoles.ADMIN, userRoles.PATIENT],
-    },
-    {
       path: "/Dashboard/AppointmentsList",
       element: <AppointmentListAdmin />,
       roles: [userRoles.ADMIN],
@@ -94,6 +89,11 @@ export default () => {
     {
       path: "/Dashboard/NewAppointment/:id",
       element: <NewAppointment />,
+      roles: [userRoles.ADMIN, userRoles.PATIENT],
+    },
+    {
+      path: "/Dashboard/appointments",
+      element: <Appointments />,
       roles: [userRoles.ADMIN, userRoles.PATIENT],
     },
     {

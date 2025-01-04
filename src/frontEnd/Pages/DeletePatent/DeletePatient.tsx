@@ -15,22 +15,25 @@ const DeletePatient: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patients, setPatients] = useState<Patient[]>([]);
-  console.log({ selectedPatient });
   useEffect(() => {
     const fetchPatientData = async () => {
       const patientData = await getPatientData();
       setPatients(patientData);
     };
     fetchPatientData();
-  }, []);
+  }, [selectedPatient]);
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedPatient) {
-      console.log("Deleting patient:", selectedPatient);
-      deletePatient(selectedPatient.id);
+      await deletePatient(selectedPatient.id);
+
+      setPatients((prevPatients) =>
+        prevPatients.filter((patient) => patient.id !== selectedPatient.id)
+      );
+
       setSelectedPatient(null);
     }
   };
