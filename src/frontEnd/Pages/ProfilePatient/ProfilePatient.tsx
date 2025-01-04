@@ -69,60 +69,6 @@ const PatientProfile: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            {/* Rendez-vous */}
-            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 mt-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Calendar className="text-blue-600" size={24} />
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Rendez-vous
-                </h2>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-medium">Prochain rendez-vous</p>
-                    <p className="text-sm text-gray-600">
-                      {new Date(patient.nextAppointment).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                    Modifier
-                  </button>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-medium">Dernière visite</p>
-                    <p className="text-sm text-gray-600">
-                      {new Date(patient.lastVisit).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                    Voir détails
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Notes médicales */}
-            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 mt-6">
-              <div className="flex items-center gap-2 mb-4">
-                <FileText className="text-blue-600" size={24} />
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Notes Médicales
-                </h2>
-              </div>
-              <div className="space-y-4">
-                {patient.notes.map((note) => (
-                  <div key={note.id} className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">
-                      {new Date(note.date).toLocaleDateString()}
-                    </p>
-                    <p className="font-medium">{note.content}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Sidebar */}
@@ -145,32 +91,6 @@ const PatientProfile: React.FC = () => {
                       {new Date(notification.date).toLocaleDateString()}
                     </p>
                     <p className="font-medium">{notification.message}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-              <div className="flex items-center gap-2 mb-4">
-                <CreditCard className="text-blue-600" size={24} />
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Paiements Récents
-                </h2>
-              </div>
-              <div className="space-y-4">
-                {patient.payments.map((payment) => (
-                  <div key={payment.id} className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-sm text-gray-600">
-                          {new Date(payment.date).toLocaleDateString()}
-                        </p>
-                        <p className="font-medium">{payment.amount}€</p>
-                      </div>
-                      <span className="px-3 py-1 text-sm rounded-full text-green-700 bg-green-100">
-                        Payé
-                      </span>
-                    </div>
                   </div>
                 ))}
               </div>

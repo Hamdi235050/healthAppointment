@@ -14,14 +14,14 @@ export interface StatCard {
 
 export interface Appointment {
   id: number;
-  patientName: string;
-  notes?: string;
+   notes?: string;
   patient?: {
     id?: null;
-    userId: number;
-};
+    name?: string;
+
+ };
+  patientName: string 
   appointmentDate?: string;
-  time: string;
   type: string;
   status:  "SCHEDULED" |  "CONFIRMED" |  "CANCELLED"
 }

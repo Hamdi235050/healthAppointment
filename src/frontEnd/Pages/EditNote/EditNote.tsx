@@ -43,8 +43,7 @@ const EditNote: React.FC = () => {
     };
     fetchPatientData();
   }, [getPatientData]);
-  console.log(notes);
-  const filteredNote = notes.find(
+   const filteredNote = notes.find(
     (note) => note.patient?.id === parseInt(selected)
   );
 

@@ -28,10 +28,10 @@ export default function FormInput({
       </label>
       <input
         type={type}
-        name={name} // Pass name prop to the input
+        name={name}
         defaultValue={defaultValue}
-        value={value} // Use value prop for controlled input
-        onChange={onChange} // Handle value changes for controlled input
+        value={value}
+        onChange={onChange}
         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         placeholder={placeholder}
       />

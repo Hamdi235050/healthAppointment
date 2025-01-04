@@ -49,8 +49,6 @@ const DeleteNote: React.FC = () => {
     fetchPatientData();
   }, [notes]);
 
-  console.log({ notes });
-
   const filteredNotes = notes.filter(
     (note) =>
       note.patientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||

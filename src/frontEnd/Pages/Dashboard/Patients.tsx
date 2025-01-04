@@ -8,7 +8,7 @@ import { getConsultationData } from "../../../backEnd/getLatestVisit";
 export type Patient = {
   id: number;
   name: string;
-  birthDate: number;
+  age: string;
   lastVisit: Date;
   condition: string;
 };
@@ -32,10 +32,13 @@ const Patients: React.FC = () => {
               patientId: patient.id,
             });
             console.log({ lastVisit });
+            console.log({ patient });
             return {
               id: patient.id,
               name: patient.firstName + " " + patient.lastName,
-              age: patient.birthDate ? patient.birthDate : "Non Spécifier",
+              age: patient.birthDate
+                ? (patient.birthDate as string)
+                : "Non Spécifier",
               lastVisit: lastVisit?.consultationDate
                 ? new Date(lastVisit?.consultationDate).toLocaleDateString()
                 : "Non Spécifier",
@@ -95,7 +98,10 @@ const Patients: React.FC = () => {
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4">{patient.name}</td>
-                  <td className="py-3 px-4">{patient?.birthDate} ans</td>
+                  <td className="py-3 px-4">
+                    {new Date().getFullYear() -
+                      new Date(patient.age).getFullYear()}{" "}
+                  </td>
                   <td className="py-3 px-4">
                     {patient.lastVisit.toLocaleString()}
                   </td>

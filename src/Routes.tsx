@@ -1,24 +1,25 @@
+import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import getCurrentUser from "./backEnd/getCurrentUser";
+import { getRole } from "./backEnd/getData";
+import { Accueil } from "./frontEnd/Pages/Accueil/Accueil";
+import AddNote from "./frontEnd/Pages/AddNote/AddNote";
+import AddPatient from "./frontEnd/Pages/AddPatient/AddPatient";
 import Appointments from "./frontEnd/Pages/Dashboard/Appointments";
+import { AppointmentListAdmin } from "./frontEnd/Pages/Dashboard/components/appointments/AppointmentsListAdmin";
+import EditAppointment from "./frontEnd/Pages/Dashboard/components/appointments/EditAppointment";
+import NewAppointment from "./frontEnd/Pages/Dashboard/components/appointments/NewAppointment";
 import Dashboard from "./frontEnd/Pages/Dashboard/Dashboard";
 import Patients from "./frontEnd/Pages/Dashboard/Patients";
 import Settings from "./frontEnd/Pages/Dashboard/Settings";
 import Statistics from "./frontEnd/Pages/Dashboard/Statistics";
 import Transactions from "./frontEnd/Pages/Dashboard/Transactions";
-import Login from "./frontEnd/Pages/Login";
-import AddPatient from "./frontEnd/Pages/AddPatient/AddPatient";
-import DeletePatient from "./frontEnd/Pages/DeletePatent/DeletePatient";
-import EditPatient from "./frontEnd/Pages/EditPatient/EditPatient";
-import AddNote from "./frontEnd/Pages/AddNote/AddNote";
 import DeleteNote from "./frontEnd/Pages/DeleteNote/DeleteNote";
+import DeletePatient from "./frontEnd/Pages/DeletePatent/DeletePatient";
 import EditNote from "./frontEnd/Pages/EditNote/EditNote";
-import NewAppointment from "./frontEnd/Pages/Dashboard/components/appointments/NewAppointment";
+import EditPatient from "./frontEnd/Pages/EditPatient/EditPatient";
+import Login from "./frontEnd/Pages/Login";
 import PatientProfile from "./frontEnd/Pages/ProfilePatient/ProfilePatient";
-import EditAppointment from "./frontEnd/Pages/Dashboard/components/appointments/EditAppointment";
-import { getRole } from "./backEnd/getData";
-import { useEffect, useState } from "react";
-import getCurrentUser from "./backEnd/getCurrentUser";
-import { Accueil } from "./frontEnd/Pages/Accueil/Accueil";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 export default () => {
   const userRoles = {
@@ -84,6 +85,11 @@ export default () => {
       path: "/Dashboard/appointments",
       element: <Appointments />,
       roles: [userRoles.ADMIN, userRoles.PATIENT],
+    },
+    {
+      path: "/Dashboard/AppointmentsList",
+      element: <AppointmentListAdmin />,
+      roles: [userRoles.ADMIN],
     },
     {
       path: "/Dashboard/NewAppointment/:id",

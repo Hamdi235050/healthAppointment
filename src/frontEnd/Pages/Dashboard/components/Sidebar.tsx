@@ -54,6 +54,12 @@ const Sidebar = () => {
       roles: ["PATIENT"],
     },
     {
+      path: "/Dashboard/AppointmentsList",
+      icon: <Calendar size={20} />,
+      label: "Confirmer les rendez-vous",
+      roles: ["ADMIN"],
+    },
+    {
       path: "/Dashboard/appointments",
       icon: <Calendar size={20} />,
       label: "Liste des rendez-vous",
