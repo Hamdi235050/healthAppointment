@@ -18,17 +18,21 @@ import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getRole, logout } from "../../../../backEnd/getData";
 import getCurrentUser from "../../../../backEnd/getCurrentUser";
+import { getName } from "../../../../backEnd/getNameSettings";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const userRole = getRole() || "";
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
   const [role, setRole] = useState<string | null>(null);
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const currentUser = await getCurrentUser();
+        const name = await getName();
+        setName(name);
         const role = await getRole();
         setRole(role);
         setUser(currentUser);
@@ -38,8 +42,11 @@ const Sidebar = () => {
     };
 
     fetchUser();
-  }, [getCurrentUser, getRole]);
-  console.log({ role });
+  }, [getCurrentUser, getRole, getName]);
+  console.log({ name });
+  let formattedName = name.replace(/"/g, "");
+
+  const two = formattedName.substring(0, 2);
   const menuItems = [
     {
       path: "/Dashboard/home",
@@ -161,7 +168,7 @@ const Sidebar = () => {
             isCollapsed ? "text-center" : ""
           }`}
         >
-          {isCollapsed ? "CM" : "Cabinet Médical"}
+          {isCollapsed ? `${two}` : `${formattedName}`}
         </h1>
       </div>
 

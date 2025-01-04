@@ -3,7 +3,7 @@ export type noteType = {
     contenu: string,
     observations: string,
     diagnosis: string,
-     noteId: number,
+    noteId: number,
     hoursElapsed: number,
     suivi: string,
     patient: {

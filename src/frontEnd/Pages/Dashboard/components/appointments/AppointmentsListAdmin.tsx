@@ -7,6 +7,7 @@ import { getRole } from "../../../../../backEnd/getData";
 import { getAppointmentsData } from "../../../../../backEnd/getDataAppointments";
 import { getAppointmentsDataById } from "../../../../../backEnd/getAppointmentByPatientId";
 import { Calendar } from "lucide-react";
+import { updateAppointmentByStatus } from "../../../../../backEnd/editAppointmentsByStatus";
 
 export const AppointmentListAdmin = () => {
   const [appointments, setAppointments] = React.useState<Appointment[]>([]);
@@ -44,6 +45,9 @@ export const AppointmentListAdmin = () => {
   };
   const onCancel = (id: number) => {
     updateAppointmentByStatus(id, "CANCELLED");
+  };
+  const onComplete = (id: number) => {
+    updateAppointmentByStatus(id, "COMPLETED");
   };
 
   return (
@@ -86,6 +90,7 @@ export const AppointmentListAdmin = () => {
                   appointment={appointment}
                   onConfirm={onConfirm}
                   onCancel={onCancel}
+                  onComplete={onComplete}
                 />
               ))}
             </tbody>

@@ -20,7 +20,7 @@ type lastVisit = {
 };
 
 const Patients: React.FC = () => {
-  const [patients, setPatients] = useState<Patient[]>([]); // You can replace `any` with a more specific type if needed
+  const [patients, setPatients] = useState<Patient[]>([]);
   console.log({ patients });
   useEffect(() => {
     const fetchPatients = async () => {
@@ -79,7 +79,6 @@ const Patients: React.FC = () => {
                 size={20}
               />
             </div>
-            <button className="btn btn-primary">Nouveau Patient</button>
           </div>
 
           <table className="w-full">

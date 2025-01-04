@@ -6,12 +6,14 @@ interface AppointmentRowProps {
   appointment: Appointment;
   onConfirm: (id: number) => void;
   onCancel: (id: number) => void;
+  onComplete: (id: number) => void;
 }
 
 export const AppointmentRow: React.FC<AppointmentRowProps> = ({
   appointment,
   onConfirm,
   onCancel,
+  onComplete,
 }) => {
   const formattedDate = new Date(
     appointment.appointmentDate!
@@ -46,6 +48,13 @@ export const AppointmentRow: React.FC<AppointmentRowProps> = ({
             onClick={() => onCancel(appointment.id)}
           >
             Annuler
+          </Button>
+          <Button
+            variant="success"
+            size="sm"
+            onClick={() => onComplete(appointment.id)}
+          >
+            Terminer
           </Button>
         </div>
       </td>
