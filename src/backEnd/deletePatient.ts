@@ -16,14 +16,14 @@ export const deletePatient = async (patientId: string | number) => {
                 Authorization: `Bearer ${token}`,
             },
         });
-
+         
         if (response.status === 500) {
             console.warn("Server returned 500 error. Treating as success...");
             toast.success("Patient deleted successfully!");
             return;
         }
 
-        if (!response.ok) {
+        if (response.ok) {
             console.error(`Failed to delete patient. Status: ${response.status}`);
             toast.error(`Failed to delete patient. Status: ${response.status}`);
             return;

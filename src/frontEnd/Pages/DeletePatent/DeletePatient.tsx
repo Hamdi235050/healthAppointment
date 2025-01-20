@@ -28,6 +28,7 @@ const DeletePatient: React.FC = () => {
 
   const handleDelete = async () => {
     if (selectedPatient) {
+      console.log("Deleting patient:", selectedPatient);
       await deletePatient(selectedPatient.id);
 
       setPatients((prevPatients) =>
