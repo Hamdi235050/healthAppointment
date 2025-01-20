@@ -16,6 +16,7 @@ const Dashboard: React.FC = () => {
     const fetchTodayAppointment = async () => {
       const todayAppointments = await getTodayAppointment();
       const todayNotes = await getTodayNotes();
+      console.log({ todayNotes });
       setTodayNotes(todayNotes);
       setTodayAppointments(todayAppointments);
     };

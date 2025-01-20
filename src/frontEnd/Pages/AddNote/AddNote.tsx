@@ -70,7 +70,7 @@ const AddNote: React.FC = () => {
           </h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 max-w-3xl">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 w-full">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -158,5 +158,4 @@ const AddNote: React.FC = () => {
     </div>
   );
 };
-
 export default AddNote;

@@ -52,7 +52,6 @@ export default function EditAppointment() {
   const selectedUser = useMemo(() => {
     return appointments.find((ap) => ap.id === parseInt(selected));
   }, [selected]);
-  console.log({ selectedUser });
   const [formData, setFormData] = useState({
     id: selected
       ? appointments.find((ap) => ap.patient?.id === parseInt(selected))

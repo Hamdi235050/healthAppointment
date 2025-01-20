@@ -2,8 +2,8 @@ import { Lock, Mail } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import login from "../../backEnd/getData";
 import backgroundImage from "../../assets/background.png";
+import login from "../../backEnd/getData";
 import getUserRole from "../../backEnd/getUserRole";
 export default function Login() {
   const [email, setEmail] = useState("");

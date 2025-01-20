@@ -11,6 +11,7 @@ const AddPatient: React.FC = () => {
     lastName: "",
     birthDate: "",
     gender: "",
+    id: "",
     phone: "",
     email: "",
     address: "",

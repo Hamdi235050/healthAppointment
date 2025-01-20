@@ -11,6 +11,9 @@ export type noteType = {
       firstName?: string,
       lastName?: string,
     },
+    id: string;
+
+ 
   }
 
   export type patientType = {
