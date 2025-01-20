@@ -45,7 +45,7 @@ const AddPatient: React.FC = () => {
           </h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 max-w-3xl">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>

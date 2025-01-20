@@ -49,7 +49,7 @@ const DeletePatient: React.FC = () => {
           </h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 max-w-3xl">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
           <div className="mb-6">
             <div className="relative">
               <input

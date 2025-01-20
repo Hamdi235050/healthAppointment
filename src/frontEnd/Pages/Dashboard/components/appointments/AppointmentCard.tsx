@@ -9,6 +9,7 @@ const statusStyles = {
   CONFIRMED: "text-green-700 bg-green-100",
   SCHEDULED: "text-yellow-700 bg-yellow-100",
   CANCELLED: "text-red-700 bg-red-100",
+  COMPLETED: "text-blue-700 bg-blue-100",
 };
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => (

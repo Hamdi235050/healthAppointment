@@ -8,7 +8,7 @@ const getTotalConsultations = async () => {
       throw new Error('No token found');
     }
 
-     const response = await axios.get('http://localhost:8081/api/v1/consultation/total', {
+     const response = await axios.get('http://localhost:8081/api/v1/appointments/total-for-current-month', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

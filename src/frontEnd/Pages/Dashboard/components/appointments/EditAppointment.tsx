@@ -54,7 +54,10 @@ export default function EditAppointment() {
   }, [selected]);
   console.log({ selectedUser });
   const [formData, setFormData] = useState({
-    id: appointments.find((ap) => ap.id === parseInt(selected))?.id,
+    id: selected
+      ? appointments.find((ap) => ap.patient?.id === parseInt(selected))
+          ?.patient?.id
+      : undefined,
     patient: {
       id: selectedUser?.patient?.id!,
       name: selectedUser?.patient?.name,

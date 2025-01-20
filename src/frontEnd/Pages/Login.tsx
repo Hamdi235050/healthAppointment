@@ -2,8 +2,9 @@ import { Lock, Mail } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import login, { getRole } from "../../backEnd/getData";
+import login from "../../backEnd/getData";
 import backgroundImage from "../../assets/background.png";
+import getUserRole from "../../backEnd/getUserRole";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +14,7 @@ export default function Login() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const role = await getRole();
+        const role = await getUserRole();
         setRole(role);
       } catch (err) {
         console.error("Error fetching user:", err);
@@ -21,7 +22,7 @@ export default function Login() {
     };
 
     fetchUser();
-  }, [getRole]);
+  }, [getUserRole]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -40,7 +41,10 @@ export default function Login() {
           draggable: true,
           progress: undefined,
         });
-        navigate(role === "ADMIN" ? "/Dashboard/home" : "/Dashboard/patients");
+        const userRole = await getUserRole();
+        navigate(
+          userRole == "ADMIN" ? "/Dashboard/home" : "/Dashboard/appointments"
+        );
       }
     } catch (error) {
       toast.error("Mot de passe invalide", {

@@ -73,7 +73,7 @@ const DeleteNote: React.FC = () => {
           </h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 max-w-3xl">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
           <div className="mb-6">
             <div className="relative">
               <input
@@ -134,7 +134,7 @@ const DeleteNote: React.FC = () => {
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
-                  onClick={() => navigate("/patients")}
+                  onClick={() => setSelectedNote(null)}
                   className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Annuler

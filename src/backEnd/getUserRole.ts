@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const getCurrentUser = async () => {
+const getUserRole = async () => {
   try {
      const token = localStorage.getItem('authToken'); 
 
@@ -15,6 +15,7 @@ const getCurrentUser = async () => {
     });
 
      console.log('Current user data:', response.data);
+     localStorage.setItem('userRole', response.data); // Store the role directly
     return response.data;  
   } catch (error) {
     console.error('Error fetching current user:', error);
@@ -22,4 +23,4 @@ const getCurrentUser = async () => {
   }
 };
 
-export default getCurrentUser;
+export default getUserRole;

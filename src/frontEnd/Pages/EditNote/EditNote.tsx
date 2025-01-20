@@ -96,7 +96,7 @@ const EditNote: React.FC = () => {
   }));
 
   return (
-    <div className="flex w-screen h-screen">
+    <div className="flex w-screen h-screen w-full">
       <Sidebar />
       <div className="p-8 flex-1">
         <div className="flex items-center gap-3 mb-8">
@@ -106,7 +106,7 @@ const EditNote: React.FC = () => {
           </h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 max-w-3xl">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 w-full">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

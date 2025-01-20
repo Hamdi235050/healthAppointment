@@ -54,7 +54,7 @@ const fetchUserRole = async (): Promise<RoleResponse | null> => {
     });
 
  
-    return roleResponse.data ? roleResponse : null;
+    return roleResponse.data ? roleResponse.data : null;
   } catch (error: any) {
     console.error("Error fetching role:", error?.response?.data || error.message || error);
     return null; // Return null if fetching the role fails

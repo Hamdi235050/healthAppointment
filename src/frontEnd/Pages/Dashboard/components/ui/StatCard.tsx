@@ -1,5 +1,5 @@
-import React from 'react';
-import { StatCard as StatCardType } from '../../types';
+import React from "react";
+import { StatCard as StatCardType } from "../../types";
 
 const StatCard: React.FC<StatCardType> = ({ title, value, icon }) => (
   <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
@@ -9,6 +9,6 @@ const StatCard: React.FC<StatCardType> = ({ title, value, icon }) => (
     </div>
     <p className="text-2xl font-bold text-gray-800">{value}</p>
   </div>
-)
+);
 
 export default StatCard;

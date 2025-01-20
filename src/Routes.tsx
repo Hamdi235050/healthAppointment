@@ -28,12 +28,10 @@ export default () => {
     PATIENT: "PATIENT",
   };
 
-  const [role, setRole] = useState<string | null>(null);
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const role = await getRole();
-        setRole(role);
       } catch (err) {
         console.error("Error fetching user:", err);
       }
@@ -41,10 +39,7 @@ export default () => {
 
     fetchUser();
   }, [getRole, getCurrentUser]);
-  console.log({ role });
-  const hasAccess = (roles: string[]) => {
-    return roles.length === 0 || roles.includes(role!); // Check for no roles (i.e., accessible to all)
-  };
+
   const routesConfig = [
     {
       path: "/login",

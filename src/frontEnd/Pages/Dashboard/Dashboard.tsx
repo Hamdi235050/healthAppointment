@@ -22,7 +22,6 @@ const Dashboard: React.FC = () => {
 
     fetchTodayAppointment();
   }, [getTodayAppointment, getTodayNotes]);
-  console.log({ todayNotes });
   return (
     <div className="flex h-screen">
       <Sidebar />
