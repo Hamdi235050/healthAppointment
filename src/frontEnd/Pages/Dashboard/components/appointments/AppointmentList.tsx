@@ -26,7 +26,7 @@ const nextAppointments: Appointment[] = [
 ];
 export default function AppointmentList() {
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
+    <div className="bg-white rounded-xl shadow-sm p-6 overflow-hidden">
       <h2 className="text-lg font-semibold mb-4">Prochains Rendez-vous</h2>
       <div className="divide-y">
         {nextAppointments.map((apt, index) => (

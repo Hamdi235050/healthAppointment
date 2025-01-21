@@ -2,7 +2,8 @@
   "name": "medical-appointment-shared-components",
   "version": "1.0.0",
   "dependencies": {
-    "medical-appointment-button": "workspace:*"
+    "medical-appointment-button": "workspace:*",
+    "medical-appointment-hero": "workspace:*"
   },
   "peerDependencies": {
     "react-dom": "^18.2.0"

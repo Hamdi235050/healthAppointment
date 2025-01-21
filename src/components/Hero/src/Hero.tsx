@@ -1,7 +1,6 @@
-import React from "react";
+import { Calendar } from "lucide-react";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
-import { Calendar } from "lucide-react";
 
 const useStyles = createUseStyles({
   hero: {

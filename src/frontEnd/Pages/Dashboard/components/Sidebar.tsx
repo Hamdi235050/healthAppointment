@@ -30,7 +30,6 @@ const Sidebar = () => {
   const menuItems = getMenuItems();
   const filteredMenuItems = useMemo(() => {
     return menuItems.filter((item) => {
-      console.log({ item });
       return item.roles.includes(userRole);
     });
   }, [menuItems, userRole]);

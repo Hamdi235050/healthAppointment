@@ -10,6 +10,7 @@ import {
   UserPlus,
   Users,
   History,
+  CreditCard,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import getCurrentUser from "../../../../../backEnd/getCurrentUser";
@@ -42,6 +43,12 @@ const getMenuItems = () => {
         path: "/Dashboard/AppointmentsList",
         icon: <Calendar size={20} />,
         label: "Confirmer les rendez-vous",
+        roles: ["ADMIN"],
+      },
+      {
+        path: "/Dashboard/transactions/manage",
+        icon: <CreditCard size={20} />,
+        label: "Gestion de transactions",
         roles: ["ADMIN"],
       },
       {
@@ -123,12 +130,6 @@ const getMenuItems = () => {
         path: "/Dashboard/statistics",
         icon: <BarChart2 size={20} />,
         label: "Statistiques",
-        roles: ["ADMIN", "user"],
-      },
-      {
-        path: "/Dashboard/transactions",
-        icon: <History size={20} />,
-        label: "Historique des transactions",
         roles: ["ADMIN", "user"],
       },
     ],

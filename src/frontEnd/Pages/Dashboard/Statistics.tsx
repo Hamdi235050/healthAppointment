@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar";
 
 const Statistics: React.FC = () => {
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen w-screen overflow-y-hidden">
       <Sidebar />
       <div className="p-8 flex-1">
         <div className="flex items-center gap-3 mb-8">

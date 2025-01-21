@@ -36,7 +36,7 @@ const AddPatient: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen w-screen overflow-hidden">
       <Sidebar />
       <div className="p-8 flex-1 h-screen w-screen">
         <div className="flex items-center gap-3 mb-8">

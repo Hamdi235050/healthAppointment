@@ -1,44 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { History } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import { patientType } from "../../../backEnd/type";
+import getAllTransactions from "../../../backEnd/getTransacrion";
 
 interface Transaction {
   id: number;
   date: string;
-  patient: string;
+  patient: patientType;
   type: string;
   amount: number;
   status: "completed" | "pending" | "cancelled";
 }
 
 const Transactions: React.FC = () => {
-  const transactions: Transaction[] = [
-    {
-      id: 1,
-      date: "15/03/2024",
-      patient: "Jean Dupont",
-      type: "Consultation",
-      amount: 25,
-      status: "completed",
-    },
-    {
-      id: 2,
-      date: "14/03/2024",
-      patient: "Marie Martin",
-      type: "Suivi",
-      amount: 30,
-      status: "completed",
-    },
-    {
-      id: 3,
-      date: "13/03/2024",
-      patient: "Pierre Bernard",
-      type: "Consultation urgente",
-      amount: 40,
-      status: "pending",
-    },
-  ];
+  // const transactions: Transaction[] = [
+  //   {
+  //     id: 1,
+  //     date: "15/03/2024",
+  //     patient: "Jean Dupont",
+  //     type: "Consultation",
+  //     amount: 25,
+  //     status: "completed",
+  //   },
+  //   {
+  //     id: 2,
+  //     date: "14/03/2024",
+  //     patient: "Marie Martin",
+  //     type: "Suivi",
+  //     amount: 30,
+  //     status: "completed",
+  //   },
+  //   {
+  //     id: 3,
+  //     date: "13/03/2024",
+  //     patient: "Pierre Bernard",
+  //     type: "Consultation urgente",
+  //     amount: 40,
+  //     status: "pending",
+  //   },
+  // ];
+  const [transaction, setTransaction] = useState<Transaction[]>([]);
+  useEffect(() => {
+    const fetchTransaction = async () => {
+      try {
+        const list = await getAllTransactions();
 
+        setTransaction(list); // Update the state with mapped data
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      }
+    };
+
+    fetchTransaction();
+  }, []);
+  console.log({ transaction });
   const statusStyles = {
     completed: "text-green-700 bg-green-100",
     pending: "text-yellow-700 bg-yellow-100",
@@ -46,7 +62,7 @@ const Transactions: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen w-screen overflow-hidden">
       <Sidebar />
       <div className="p-8 flex-1">
         <div className="flex items-center gap-3 mb-8">
@@ -68,13 +84,13 @@ const Transactions: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
+              {transaction.map((transaction) => (
                 <tr
                   key={transaction.id}
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4">{transaction.date}</td>
-                  <td className="py-3 px-4">{transaction.patient}</td>
+                  <td className="py-3 px-4">{transaction.patient.id}</td>
                   <td className="py-3 px-4">{transaction.type}</td>
                   <td className="py-3 px-4">{transaction.amount}€</td>
                   <td className="py-3 px-4">

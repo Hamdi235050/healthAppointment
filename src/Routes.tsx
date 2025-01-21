@@ -20,6 +20,7 @@ import EditNote from "./frontEnd/Pages/EditNote/EditNote";
 import EditPatient from "./frontEnd/Pages/EditPatient/EditPatient";
 import Login from "./frontEnd/Pages/Login";
 import PatientProfile from "./frontEnd/Pages/ProfilePatient/ProfilePatient";
+import AdminTransactions from "./components/Transactions/AdminTransactions";
 
 export default () => {
   const userRoles = {
@@ -62,6 +63,11 @@ export default () => {
       roles: [userRoles.DOCTOR, userRoles.ADMIN],
     },
     {
+      path: "/Dashboard/transactions/manage",
+      element: <AdminTransactions />,
+      roles: [userRoles.ADMIN],
+    },
+    {
       path: "/Dashboard/patients/notes/delete",
       element: <DeleteNote />,
       roles: [userRoles.DOCTOR, userRoles.ADMIN],
@@ -99,11 +105,6 @@ export default () => {
     {
       path: "/Dashboard/Statistics",
       element: <Statistics />,
-      roles: [userRoles.ADMIN],
-    },
-    {
-      path: "/Dashboard/Transactions",
-      element: <Transactions />,
       roles: [userRoles.ADMIN],
     },
     {

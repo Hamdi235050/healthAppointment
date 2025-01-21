@@ -13,7 +13,7 @@ const statusStyles = {
 };
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => (
-  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg overflow-hidden">
     <div>
       <p className="font-medium text-gray-800">{appointment.patientName}</p>
       <p className="text-sm text-gray-600">

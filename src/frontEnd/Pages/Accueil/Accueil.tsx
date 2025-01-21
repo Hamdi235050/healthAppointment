@@ -1,8 +1,9 @@
 import Footer from "../Footer";
-import Hero from "../Hero";
 import Navbar from "../Navbar";
-import Services from "../Services";
+import { Services } from "../../../components/Hero";
+import Hero from "../../../components/Hero/src/Hero";
 import Team from "../Team";
+import Testimonials from "../../../components/Hero/src/Team";
 
 export const Accueil = () => {
   return (
@@ -10,7 +11,7 @@ export const Accueil = () => {
       <Navbar />
       <Hero />
       <Services />
-      <Team />
+      <Testimonials />
       <Footer />
     </div>
   );
