@@ -5,16 +5,13 @@ import { updateEmailSetting, updateName } from "../../../backEnd/Settings";
 import { toast } from "react-toastify";
 import { getEmail, getName } from "../../../backEnd/getNameSettings";
 const Settings = () => {
-  // State to track dark mode
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [cabinetName, setCabinetName] = useState("");
   const [email, setEmail] = useState("");
-  // Toggle dark mode when checkbox changes
   const handleDarkModeChange = () => {
     setIsDarkMode((prevMode) => !prevMode);
   };
 
-  // Initialize dark mode state from localStorage on initial load
   useEffect(() => {
     const fetchData = async () => {
       const savedDarkMode = localStorage.getItem("darkMode") === "true";
@@ -101,7 +98,9 @@ const Settings = () => {
                   <input
                     type="text"
                     value={cabinetName}
-                    onChange={(e) => setCabinetName(e.target.value)}
+                    onChange={(e) =>
+                      setCabinetName(e.target.value.replace(/"/g, ""))
+                    }
                     onBlur={handleSaveName} // Save on blur
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
                       isDarkMode

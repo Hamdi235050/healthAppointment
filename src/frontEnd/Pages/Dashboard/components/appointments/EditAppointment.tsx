@@ -81,7 +81,6 @@ export default function EditAppointment() {
 
     setFormData((prevData) => {
       if (name === "appointmentDate" || name === "appointmentTime") {
-        // Update the date or time portion while keeping the other part intact
         const [currentDate, currentTime] = prevData.appointmentDate
           ? prevData.appointmentDate.split("T")
           : ["", ""];
@@ -106,7 +105,7 @@ export default function EditAppointment() {
         setFormData({
           id: appointment.id,
           patient: {
-            id: selected,
+            id: appointment.patient.id,
           },
           appointmentDate: appointment.appointmentDate!,
           type: appointment.type,
@@ -132,10 +131,10 @@ export default function EditAppointment() {
           }}
           defaultValue=""
         >
-          <option value="">Sélectionner un patient</option>
+          <option value="">Sélectionner un rendez vous </option>
           {appointments.map((ap) => (
             <option key={ap.id} value={ap.id} className="cursor-pointer">
-              {ap.patient?.name}
+              {ap.notes}
             </option>
           ))}
         </select>

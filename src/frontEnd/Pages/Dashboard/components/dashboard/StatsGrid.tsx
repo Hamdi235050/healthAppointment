@@ -1,16 +1,14 @@
 import { Activity, Calendar, FileText, Users } from "lucide-react";
 import React from "react";
 import getTotalNoteMedical from "../../../../../backEnd/getNoteMedical";
+import getTodayAppointment from "../../../../../backEnd/getTodayAppointment";
 import getTotalConsultations from "../../../../../backEnd/getTotalConsultations";
 import getTotalPatient from "../../../../../backEnd/getTotalPatient";
-import getTotalAppointments from "../../../../../backEnd/getTotlaAppointments";
 import { StatCard as StatCardType } from "../../types";
 import StatCard from "../ui/StatCard";
-import getTodayAppointment from "../../../../../backEnd/getTodayAppointment";
 
 const StatsGrid: React.FC = () => {
   const [totalPatients, setTotalPatients] = React.useState<number>(0);
-  const [totalAppointments, setTotalAppointments] = React.useState<number>(0);
   const [totalConsultations, setTotalConsultaitons] = React.useState<number>(0);
   const [todayAppointments, setTodayAppointments] = React.useState<number>(0);
   const [totalNoteMedical, setTotalNoteMedical] = React.useState<number>(0);
@@ -18,20 +16,17 @@ const StatsGrid: React.FC = () => {
     const fetchTotalPatients = async () => {
       const total = await getTotalPatient();
 
-      const totalAppointments = await getTotalAppointments();
       const todayAppointments = await getTodayAppointment();
       const totalConsultations = await getTotalConsultations();
       const totalNoteMedicale = await getTotalNoteMedical();
       setTotalPatients(total);
       setTodayAppointments(todayAppointments.length);
-      setTotalAppointments(totalAppointments);
       setTotalConsultaitons(totalConsultations);
       setTotalNoteMedical(totalNoteMedicale);
     };
 
     fetchTotalPatients();
   }, []);
-  console.log({ todayAppointments });
   const stats: StatCardType[] = [
     {
       title: "Patients Total",

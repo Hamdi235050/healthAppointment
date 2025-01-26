@@ -1,17 +1,18 @@
 import React from "react";
+import getTodayAppointment from "../../../backEnd/getTodayAppointment";
+import getTodayNotes from "../../../backEnd/getTodayNotes";
 import Sidebar from "./components/Sidebar";
 import AppointmentCard from "./components/appointments/AppointmentCard";
 import StatsGrid from "./components/dashboard/StatsGrid";
 import NoteCard from "./components/notes/NoteCard";
 import { Appointment, MedicalNote } from "./types";
-import getTodayAppointment from "../../../backEnd/getTodayAppointment";
-import getTodayNotes from "../../../backEnd/getTodayNotes";
+import { noteType } from "../../../backEnd/type";
 
 const Dashboard: React.FC = () => {
   const [todayAppointments, setTodayAppointments] = React.useState<
     Appointment[]
   >([]);
-  const [todayNotes, setTodayNotes] = React.useState<MedicalNote[]>([]);
+  const [todayNotes, setTodayNotes] = React.useState<noteType[]>([]);
   React.useEffect(() => {
     const fetchTodayAppointment = async () => {
       const todayAppointments = await getTodayAppointment();
@@ -20,7 +21,6 @@ const Dashboard: React.FC = () => {
       setTodayNotes(todayNotes);
       setTodayAppointments(todayAppointments);
     };
-
     fetchTodayAppointment();
   }, [getTodayAppointment, getTodayNotes]);
   return (

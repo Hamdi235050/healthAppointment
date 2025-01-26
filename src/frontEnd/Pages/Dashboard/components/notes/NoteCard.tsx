@@ -1,11 +1,21 @@
 import React from "react";
-import { noteType } from "../../../../../backEnd/type";
 
 interface NoteCardProps {
-  note: noteType;
+  note: {
+    patient: {
+      firstName: string;
+      lastName: string;
+    };
+    hoursElapsed: string;
+    contenu: string;
+  };
 }
 
-const NoteCard: React.FC<NoteCardProps> = ({ note }) => (
+const NoteCard: React.FC<NoteCardProps> = ({
+  note,
+}: {
+  note: NoteCardProps["note"];
+}) => (
   <div className="p-4 bg-gray-50 rounded-lg">
     <div className="flex items-center justify-between mb-2">
       <p className="font-medium text-gray-800">

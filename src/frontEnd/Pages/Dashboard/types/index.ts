@@ -14,22 +14,24 @@ export interface StatCard {
 
 export interface Appointment {
   id: number;
-   notes?: string;
-   time?: string;
-  patient?: {
+  notes?: string;
+  time?: string;
+  patient: {
     id?: null;
     name?: string;
-
- };
-  patientName: string 
+  };
+  patientName: string;
   appointmentDate?: string;
   type: string;
-  status:  "SCHEDULED" |  "CONFIRMED" |  "CANCELLED"
+  status: "SCHEDULED" | "CONFIRMED" | "CANCELLED";
 }
 
 export interface MedicalNote {
-  id: number;
-  patientName: string;
-  timestamp: string;
-  content: string;
+  id: string;
+  patient: {
+    firstName: string;
+    lastName: string;
+  };
+  hoursElapsed: string;
+  contenu: string;
 }

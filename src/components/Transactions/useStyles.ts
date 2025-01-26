@@ -3,13 +3,16 @@ import { createUseStyles } from "react-jss";
 export const useStyles = createUseStyles({
   container: {
     padding: "2rem",
+    color: "black",
   },
   center: {
     display: "flex",
     justifyContent: "center",
+    color: "black",
   },
   header: {
     marginBottom: "2rem",
+    color: "black",
   },
   title: {
     fontSize: "1.875rem",
@@ -24,6 +27,12 @@ export const useStyles = createUseStyles({
     display: "flex",
     alignItems: "center",
     gap: 5,
+    color: "black",
+  },
+  popupContent: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 15,
   },
   input: {
     padding: "12px 20px",
@@ -36,6 +45,7 @@ export const useStyles = createUseStyles({
     outline: "none",
     transition: "all 0.3s ease",
     backgroundColor: "#f9f9f9",
+    color: "black",
   },
   controls: {
     display: "flex",
@@ -44,11 +54,13 @@ export const useStyles = createUseStyles({
     marginBottom: "1.5rem",
     gap: "1rem",
     flexWrap: "wrap",
+    color: "black",
   },
   searchContainer: {
     position: "relative",
     flex: "1",
     maxWidth: "32rem",
+    color: "black",
   },
   searchIcon: {
     position: "absolute",
@@ -67,10 +79,12 @@ export const useStyles = createUseStyles({
       borderColor: "#2563eb",
       boxShadow: "0 0 0 2px rgba(37, 99, 235, 0.2)",
     },
+    color: "black",
   },
   actions: {
     display: "flex",
     gap: "0.5rem",
+    color: "black",
   },
   button: {
     display: "inline-flex",
@@ -81,6 +95,7 @@ export const useStyles = createUseStyles({
     fontSize: "0.875rem",
     fontWeight: 500,
     transition: "all 0.2s",
+    color: "black",
   },
   filterButton: {
     extend: "button",
@@ -105,9 +120,11 @@ export const useStyles = createUseStyles({
     borderRadius: "0.5rem",
     boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
     overflow: "hidden",
+    color: "black",
   },
   thead: {
     backgroundColor: "#f9fafb",
+    color: "black",
   },
   th: {
     padding: "0.75rem 1rem",
@@ -131,6 +148,7 @@ export const useStyles = createUseStyles({
     borderRadius: "9999px",
     fontSize: "0.75rem",
     fontWeight: 500,
+    color: "black",
   },
   statusPaid: {
     extend: "status",
@@ -164,6 +182,7 @@ export const useStyles = createUseStyles({
     padding: "1rem",
     backgroundColor: "white",
     borderTop: "1px solid #e5e7eb",
+    color: "black",
   },
   pageInfo: {
     fontSize: "0.875rem",
@@ -172,6 +191,7 @@ export const useStyles = createUseStyles({
   pageControls: {
     display: "flex",
     gap: "0.25rem",
+    color: "black",
   },
   pageButton: {
     padding: "0.5rem",

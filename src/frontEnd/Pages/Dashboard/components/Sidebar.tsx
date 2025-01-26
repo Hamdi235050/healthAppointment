@@ -25,7 +25,7 @@ const Sidebar = () => {
     };
 
     fetchUser();
-  }, [getRole, getName]);
+  }, [getRole]);
 
   const menuItems = getMenuItems();
   const filteredMenuItems = useMemo(() => {
@@ -51,7 +51,9 @@ const Sidebar = () => {
             isCollapsed ? "text-center" : ""
           }`}
         >
-          {isCollapsed ? `${name.substring(0, 2)}` : `${name}`}
+          {isCollapsed
+            ? `${name.substring(0, 2)}`
+            : `${name.replace(/"/g, "")}`}
         </h1>
       </div>
 

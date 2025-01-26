@@ -1,28 +1,32 @@
 import {
   ChevronLeft,
   ChevronRight,
-  PlusCircle,
   Edit,
   Eye,
   Filter,
+  PlusCircle,
   Search,
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import Sidebar from "../../frontEnd/Pages/Dashboard/components/Sidebar";
-import { Popup } from "./Popup";
-import { useStyles } from "./useStyles";
-import getAllTransactions from "../../backEnd/getTransacrion";
-import { patientType } from "../../backEnd/type";
-import { Patient } from "../../frontEnd/Pages/Dashboard/Patients";
 import { getPatientData } from "../../backEnd/getPatients";
+import getAllTransactions from "../../backEnd/getTransacrion";
+import { submitTransaction } from "../../backEnd/submitTransaction";
+import { updateTransaction } from "../../backEnd/updateTransaction";
+import Sidebar from "../../frontEnd/Pages/Dashboard/components/Sidebar";
+import { Patient } from "../../frontEnd/Pages/Dashboard/Patients";
+import { DD_MM_YYYY, decodePlainDate, localDate } from "./localDate";
+import { Popup } from "./Popup";
+import { TransactionType } from "./types";
+import { useStyles } from "./useStyles";
+import { deleteTransaction } from "../../backEnd/deleteTransaction";
 
 export default function AdminTransactions() {
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState<number | null>();
+  const [openEdit, setOpenEdit] = useState<TransactionType | null>(null);
   const [openAdd, setOpenAdd] = useState(false); // Add state for the Add Transaction popup
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -34,25 +38,17 @@ export default function AdminTransactions() {
     default: "#6c757d",
   };
 
-  interface Transaction {
-    id: number;
-    transactionDate: Date;
-    paymentMethod: string;
-    patient: patientType;
-    type: string;
-    amount: number;
-    status: string;
-  }
-
-  const [transaction, setTransaction] = useState<Transaction[]>([]);
+  const [transaction, setTransaction] = useState<TransactionType[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
-
+  const [filtredTransaction] = transaction.filter((t) => t.id === openEdit?.id);
   const [formData, setFormData] = useState({
-    patientId: "",
-    transactionDate: "",
-    paymentMethod: "",
-    amount: "",
-    status: "pending", // Default status is "pending"
+    patient: {
+      id: filtredTransaction?.patient.id ?? (null as number | null),
+    },
+    transactionDate: filtredTransaction?.transactionDate || "",
+    paymentMethod: filtredTransaction?.paymentMethod || "",
+    amount: filtredTransaction?.amount || "",
+    status: filtredTransaction?.status || "pending",
   });
 
   useEffect(() => {
@@ -61,6 +57,20 @@ export default function AdminTransactions() {
         const patientData = await getPatientData();
 
         const list = await getAllTransactions();
+        const transactionToEdit =
+          openEdit != null && transaction.find((t) => t.id === openEdit?.id);
+
+        if (transactionToEdit) {
+          setFormData({
+            patient: { id: transactionToEdit.patient.id },
+            transactionDate: transactionToEdit.transactionDate
+              ? new Date(transactionToEdit.transactionDate)
+              : new Date(),
+            paymentMethod: transactionToEdit.paymentMethod,
+            amount: transactionToEdit.amount.toString(),
+            status: transactionToEdit.status,
+          });
+        }
         setTransaction(list);
         setPatients(patientData);
       } catch (error) {
@@ -69,7 +79,7 @@ export default function AdminTransactions() {
     };
 
     fetchTransaction();
-  }, []);
+  }, [openEdit]);
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -96,7 +106,6 @@ export default function AdminTransactions() {
         return status;
     }
   };
-
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -106,14 +115,91 @@ export default function AdminTransactions() {
       [name]: value,
     }));
   };
-
-  const handleAddTransaction = () => {
-    // Handle the addition of the new transaction
-    console.log("Adding transaction", formData);
-    // You could integrate with your backend here to save the data
-    setOpenAdd(false); // Close the popup after submission
+  const refetchTransactions = async () => {
+    try {
+      const transactionData = await getAllTransactions();
+      setTransaction(transactionData);
+    } catch (error) {
+      console.error("Error refetching transaction data:", error);
+    }
   };
+  const handleAddTransaction = () => {
+    if (
+      !formData.patient.id ||
+      !formData.transactionDate ||
+      !formData.paymentMethod ||
+      !formData.amount ||
+      isNaN(Number(formData.amount))
+    ) {
+      alert("Please fill out all fields correctly.");
+      return;
+    }
+    const newTransaction: TransactionType = {
+      transactionDate: new Date(formData.transactionDate),
+      paymentMethod: formData.paymentMethod,
+      patient: {
+        id: patients.find((p) => p.id === formData.patient.id)?.id!,
+      },
+      amount: parseFloat(formData.amount.toString()),
+      status: formData.status,
+    };
 
+    setFormData({
+      patient: {
+        id: 0,
+      },
+      transactionDate: new Date(),
+      paymentMethod: "",
+      amount: "",
+      status: "pending",
+    });
+
+    setOpenAdd(false);
+
+    submitTransaction(newTransaction, "Transaction ajoutée avec succès!");
+    refetchTransactions();
+  };
+  const handleDelete = (id: number) => {
+    deleteTransaction(id, "la transaction est supprimer");
+    setOpenDelete(null);
+    refetchTransactions();
+  };
+  const handleUpdate = (updatedData: typeof formData) => {
+    if (
+      !updatedData.patient.id ||
+      !updatedData.transactionDate ||
+      !updatedData.paymentMethod ||
+      !updatedData.amount ||
+      isNaN(Number(updatedData.amount))
+    ) {
+      alert("Please fill out all fields correctly.");
+      return;
+    }
+
+    const updatedTransaction: TransactionType = {
+      transactionDate: new Date(updatedData.transactionDate),
+      paymentMethod: updatedData.paymentMethod,
+      patient: { id: updatedData.patient.id! },
+      amount: parseFloat(updatedData.amount.toString()),
+      status: updatedData.status,
+    };
+    console.log({ updatedTransaction });
+    setTransaction((prevTransactions) =>
+      prevTransactions.map((t) =>
+        t.patient.id === updatedData.patient.id ? updatedTransaction : t
+      )
+    );
+
+    setOpenEdit(null);
+    console.log({ updatedTransaction });
+    const transactionId = openEdit?.id ?? 0;
+    updateTransaction(
+      updatedTransaction,
+      "la transaction est modifier",
+      transactionId
+    );
+    refetchTransactions();
+  };
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <Sidebar />
@@ -166,15 +252,21 @@ export default function AdminTransactions() {
               </tr>
             </thead>
             <tbody>
-              {transaction.map((transaction) => (
-                <tr key={transaction.id}>
-                  <td className={classes.td}>#{transaction.id}</td>
+              {transaction.map((transaction, index) => (
+                <tr key={index}>
+                  <td className={classes.td}>#{index}</td>
                   <td className={classes.td}>{transaction.patient.id}</td>
                   <td className={classes.td}>
-                    {new Date(transaction.transactionDate).toLocaleDateString()}
+                    {localDate(
+                      decodePlainDate(
+                        new Date(transaction?.transactionDate) ?? null
+                      ),
+                      "fr-FR",
+                      DD_MM_YYYY
+                    )}
                   </td>
                   <td className={classes.td}>
-                    {transaction.amount.toFixed(2)} €
+                    {transaction.amount.toFixed(2)} DT
                   </td>
                   <td className={classes.td}>
                     <span className={getStatusClass(transaction.status)}>
@@ -194,13 +286,13 @@ export default function AdminTransactions() {
                       <button
                         className={classes.actionButton}
                         title="Modifier"
-                        onClick={() => setOpenEdit(true)}
+                        onClick={() => setOpenEdit(transaction)}
                       >
                         <Edit size={16} />
                       </button>
                       <button
                         className={classes.actionButton}
-                        onClick={() => setOpenDelete(true)}
+                        onClick={() => setOpenDelete(transaction.id)}
                         title="Supprimer"
                       >
                         <Trash2 size={16} />
@@ -248,10 +340,10 @@ export default function AdminTransactions() {
       )}
       {openDelete && (
         <Popup
-          isOpen={openDelete}
-          onClose={() => setOpenDelete(false)}
-          onConfirm={() => console.log("todo")}
-          onCancel={() => setOpenDelete(false)}
+          isOpen={openDelete != null}
+          onClose={() => setOpenDelete(null)}
+          onConfirm={() => handleDelete(openDelete)}
+          onCancel={() => setOpenDelete(null)}
           variant={colorVariants["danger"]}
         >
           <div>voulez vous supprimer cette transactions ?</div>
@@ -259,45 +351,143 @@ export default function AdminTransactions() {
       )}
       {openEdit && (
         <Popup
-          isOpen={openEdit}
+          isOpen={openEdit != null}
           onCancel={() => {
-            setOpenEdit(false);
+            setOpenEdit(null);
           }}
           onConfirm={() => {
-            console.log("todo");
+            handleUpdate(formData);
           }}
           onClose={() => {
-            setOpenEdit(false);
+            setOpenEdit(null);
           }}
           variant={colorVariants["primary"]}
         >
-          <div>openEdit</div>
+          <div className={classes.popupContent}>
+            <span className={classes.center}>Editer une Transaction</span>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAddTransaction();
+              }}
+              className="flex flex-col gap-4"
+            >
+              <div className="flex items-center gap-4">
+                <label htmlFor="transactionDate" className="w-1/3">
+                  Transaction Date:
+                </label>
+                <input
+                  type="date"
+                  id="transactionDate"
+                  name="transactionDate"
+                  className={classes.input + " w-2/3"}
+                  value={
+                    formData.transactionDate
+                      ? new Date(formData.transactionDate)
+                          .toISOString()
+                          .split("T")[0] // Convert to Date and extract date part
+                      : ""
+                  }
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <label htmlFor="paymentMethod" className="w-1/3">
+                  Payment Method:
+                </label>
+                <input
+                  type="text"
+                  id="paymentMethod"
+                  className={classes.input + " w-2/3"}
+                  name="paymentMethod"
+                  value={formData.paymentMethod}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <label htmlFor="amount" className="w-1/3">
+                  Amount:
+                </label>
+                <input
+                  type="number"
+                  id="amount"
+                  className={classes.input + " w-2/3"}
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleFormChange}
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <label htmlFor="status" className="w-1/3">
+                  Status:
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  className="px-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-[200px] h-7"
+                  value={formData.status}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="pending">Pending</option>
+                  <option value="paid">Paid</option>
+                  <option value="failed">Failed</option>
+                </select>
+              </div>
+            </form>
+          </div>
         </Popup>
       )}
-
       <Popup
         isOpen={openAdd}
         onClose={() => setOpenAdd(false)}
-        onConfirm={() => console.log("todo")}
+        onConfirm={() => handleAddTransaction()}
         onCancel={() => setOpenAdd(false)}
         variant={colorVariants["primary"]}
       >
-        <div className="popupContent">
+        <div className={classes.popupContent}>
           <span className={classes.center}>Ajouter une Transaction</span>
-          <form onSubmit={handleAddTransaction} className="flex flex-col gap-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAddTransaction();
+            }}
+            className="flex flex-col gap-4"
+          >
             <div className="flex items-center gap-4">
               <label htmlFor="patientId" className="w-1/3">
-                Patient ID:
+                Patient:
               </label>
               <select
                 id="patientId"
-                name="patientId"
-                className={classes.input + " w-2/3"} // Adjust input width to ensure alignment
-                value={formData.patientId}
-                onChange={handleFormChange}
+                name="patient.id"
+                className="px-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-[200px] h-7"
+                value={formData.patient.id || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    patient: { id: parseInt(e.target.value) },
+                  })
+                }
+                required
               >
+                <option value="" disabled className="text-sm">
+                  Choisir un patient
+                </option>
                 {patients.map((patient) => (
-                  <option key={patient.id} value={patient.id}>
+                  <option
+                    key={patient.id}
+                    value={patient.id}
+                    className="text-sm"
+                  >
                     {patient.name}
                   </option>
                 ))}
@@ -313,8 +503,13 @@ export default function AdminTransactions() {
                 id="transactionDate"
                 name="transactionDate"
                 className={classes.input + " w-2/3"}
-                value={formData.transactionDate}
+                value={
+                  formData.transactionDate instanceof Date
+                    ? formData.transactionDate.toISOString().split("T")[0]
+                    : formData.transactionDate
+                }
                 onChange={handleFormChange}
+                required
               />
             </div>
 
@@ -329,6 +524,7 @@ export default function AdminTransactions() {
                 name="paymentMethod"
                 value={formData.paymentMethod}
                 onChange={handleFormChange}
+                required
               />
             </div>
 
@@ -343,6 +539,9 @@ export default function AdminTransactions() {
                 name="amount"
                 value={formData.amount}
                 onChange={handleFormChange}
+                min="0"
+                step="1"
+                required
               />
             </div>
 
@@ -353,9 +552,10 @@ export default function AdminTransactions() {
               <select
                 id="status"
                 name="status"
-                className={classes.input + " w-2/3"}
+                className="px-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-[200px] h-7"
                 value={formData.status}
                 onChange={handleFormChange}
+                required
               >
                 <option value="pending">Pending</option>
                 <option value="paid">Paid</option>
