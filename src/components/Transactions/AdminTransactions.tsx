@@ -79,7 +79,7 @@ export default function AdminTransactions() {
     };
 
     fetchTransaction();
-  }, [openEdit]);
+  }, [openEdit, setTransaction, getAllTransactions]);
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -255,7 +255,7 @@ export default function AdminTransactions() {
               {transaction.map((transaction, index) => (
                 <tr key={index}>
                   <td className={classes.td}>#{index}</td>
-                  <td className={classes.td}>{transaction.patient.id}</td>
+                  <td className={classes.td}>{transaction.patient.name}</td>
                   <td className={classes.td}>
                     {localDate(
                       decodePlainDate(
@@ -276,13 +276,6 @@ export default function AdminTransactions() {
                   <td className={classes.td}>{transaction.paymentMethod}</td>
                   <td className={classes.td}>
                     <div className={classes.actions}>
-                      <button
-                        className={classes.actionButton}
-                        title="Voir"
-                        onClick={() => setIsOpen(true)}
-                      >
-                        <Eye size={16} />
-                      </button>
                       <button
                         className={classes.actionButton}
                         title="Modifier"

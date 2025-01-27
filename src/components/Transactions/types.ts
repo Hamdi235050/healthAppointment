@@ -6,6 +6,7 @@ export type TransactionType = {
   paymentMethod: string;
   patient: {
     id: number;
+    name?: string;
   };
   amount: number;
   status: string;
