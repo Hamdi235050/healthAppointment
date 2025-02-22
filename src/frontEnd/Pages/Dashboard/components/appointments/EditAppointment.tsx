@@ -11,6 +11,7 @@ import FormTextarea from "../Forms/FormTextArea";
 import Sidebar from "../Sidebar";
 import { CONSULTATION_TYPES } from "./constant";
 import { updateAppointment } from "../../../../../backEnd/editAppointments";
+import { getPatientById } from "../../../../../backEnd/getPatientById";
 
 export default function EditAppointment() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -19,12 +20,13 @@ export default function EditAppointment() {
   useEffect(() => {
     const fetchAppointments = async () => {
       const currentUser = await getCurrentUser();
+      console.log({ currentUser });
       const role = await getRole();
       const data =
         role !== "PATIENT"
           ? await getAppointmentsData()
           : await getAppointmentsDataById({ patientId: currentUser });
-      console.log({ data });
+      const patients = getPatientById(currentUser);
       const list = data.map((appointment: Appointment) => ({
         id: appointment.id,
         patient: {

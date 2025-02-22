@@ -40,7 +40,9 @@ export default function AdminTransactions() {
 
   const [transaction, setTransaction] = useState<TransactionType[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [filtredTransaction] = transaction.filter((t) => t.id === openEdit?.id);
+  const [filtredTransaction] = transaction?.filter(
+    (t) => t.id === openEdit?.id
+  );
   const [formData, setFormData] = useState({
     patient: {
       id: filtredTransaction?.patient.id ?? (null as number | null),
@@ -123,7 +125,7 @@ export default function AdminTransactions() {
       console.error("Error refetching transaction data:", error);
     }
   };
-  const handleAddTransaction = () => {
+  const handleAddTransaction = async () => {
     if (
       !formData.patient.id ||
       !formData.transactionDate ||
@@ -156,15 +158,31 @@ export default function AdminTransactions() {
 
     setOpenAdd(false);
 
-    submitTransaction(newTransaction, "Transaction ajoutée avec succès!");
-    refetchTransactions();
+    submitTransaction(newTransaction, "Transaction added successfully!");
+    await refetchTransactions();
   };
-  const handleDelete = (id: number) => {
-    deleteTransaction(id, "la transaction est supprimer");
-    setOpenDelete(null);
-    refetchTransactions();
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteTransaction(
+        id,
+        "La transaction a été supprimée avec succès!"
+      );
+
+      // Mise à jour locale de l'état avant de re-fetch
+      setTransaction((prevTransactions) =>
+        prevTransactions.filter((t) => t.id !== id)
+      );
+
+      // Ensuite, refetch depuis l'API pour garantir l'état à jour
+      await refetchTransactions();
+
+      setOpenDelete(null);
+    } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
+    }
   };
-  const handleUpdate = (updatedData: typeof formData) => {
+
+  const handleUpdate = async (updatedData: typeof formData) => {
     if (
       !updatedData.patient.id ||
       !updatedData.transactionDate ||
@@ -175,6 +193,7 @@ export default function AdminTransactions() {
       alert("Please fill out all fields correctly.");
       return;
     }
+    console.log({ updatedData });
 
     const updatedTransaction: TransactionType = {
       transactionDate: new Date(updatedData.transactionDate),
@@ -198,7 +217,7 @@ export default function AdminTransactions() {
       "la transaction est modifier",
       transactionId
     );
-    refetchTransactions();
+    await refetchTransactions();
   };
   return (
     <div className="flex h-screen w-screen overflow-hidden">
@@ -349,6 +368,7 @@ export default function AdminTransactions() {
             setOpenEdit(null);
           }}
           onConfirm={() => {
+            console.log({ formData });
             handleUpdate(formData);
           }}
           onClose={() => {

@@ -26,11 +26,21 @@ const DeleteNote: React.FC = () => {
   const [patients, setPatients] = useState<PatientEditType[]>([]);
   useEffect(() => {
     const fetchPatientData = async () => {
-      const patientData = await getPatientData();
-      setPatients(patientData);
+      const notes = await getNoteData();
+      const list: Note[] = notes.map((note) => ({
+        id: note.noteId,
+        patientName: patients.find((p) => p.id === note.patient.id)?.firstName,
+        patientId: note.patient.id,
+        dateAdded:
+          new Date(note.dateAjout).toLocaleDateString("fr") ??
+          new Date().toLocaleDateString(),
+        content: note.contenu,
+      }));
+      setNotes(list);
     };
     fetchPatientData();
-  }, []);
+  }, [notes]);
+
   console.log({ notes });
   useEffect(() => {
     const fetchPatientData = async () => {
